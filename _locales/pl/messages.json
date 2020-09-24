@@ -1,0 +1,122 @@
+{
+	"notifTitle": {
+		"message": "Wykryto stream!"
+	},
+	"notifText": {
+		"message": "Wykryto nowy stream:\n"
+	},
+	"notifCopiedTitle": {
+		"message": "Skopiowano link(i)!"
+	},
+	"notifCopiedText": {
+		"message": "Pomyślnie skopiowano następujące link(i) do schowka:\n"
+	},
+	"notifIncompCopiedText": {
+		"message": "Zalecane jest użycie youtube-dl.\n\nDane skopiowane w zwykłej formie z powodu użycia narzędzia niekompatybilnego z rodzajem streamu:\n"
+	},
+	"notifErrorTitle": {
+		"message": "Błąd kopiowania!"
+	},
+	"notifErrorText": {
+		"message": "Nie udało się skopiować danych:\n"
+	},
+	"extText": {
+		"message": "Wykrywa playlisty M3U8/MPD/F4M/ISM oraz napisy VTT używane przez streamy HLS/DASH/HDS/MSS. Tworzy gotowe komendy dla programów youtube-dl (zalecany)/FFmpeg/Streamlink."
+	},
+	"copyMethod": {
+		"message": "Skopiuj link do streamu jako:"
+	},
+	"url": {
+		"message": "Zwykły link"
+	},
+	"youtubedl": {
+		"message": "Komendę youtube-dl"
+	},
+	"youtubedlc": {
+		"message": "Komendę youtube-dlc"
+	},
+	"ffmpeg": {
+		"message": "Komendę FFmpeg"
+	},
+	"streamlink": {
+		"message": "Komendę Streamlink"
+	},
+	"hlsdl": {
+		"message": "Komendę hlsdl"
+	},
+	"user": {
+		"message": "Komendę własną"
+	},
+	"streamlinkOutput": {
+		"message": "Przesyłaj strumień wyjściowy Streamlink do:"
+	},
+	"file": {
+		"message": "Pliku"
+	},
+	"player": {
+		"message": "Domyślnego odtwarzacza"
+	},
+	"customCommand": {
+		"message": "Dodatkowe argumenty linii poleceń:"
+	},
+	"userCommand": {
+		"message": "Komenda własna:"
+	},
+	"userCommandTip": {
+		"message": "Dostępne pola:\n%url%\n%filename%\n%useragent%\n%referer%\n%cookie%\n%proxy%"
+	},
+	"headersPref": {
+		"message": "Dołącz dodatkowe nagłówki:"
+	},
+	"notifPref": {
+		"message": "Wyłącz powiadomienia:"
+	},
+	"disablePref": {
+		"message": "Wyłącz wykrywanie:"
+	},
+	"clearList": {
+		"message": "Wyczyść tę listę"
+	},
+	"copyAll": {
+		"message": "Skopiuj widoczne linki"
+	},
+	"proxyPref": {
+		"message": "Użyj serwera HTTP proxy:"
+	},
+	"downloaderPref": {
+		"message": "Użyj zewnętrznego narzędzia pobierania:"
+	},
+	"buttonClick": {
+		"message": "Działanie przycisku na pasku narzędzi:"
+	},
+	"popupType": {
+		"message": "Rodzaj"
+	},
+	"popupFilename": {
+		"message": "Nazwa pliku"
+	},
+	"popupSource": {
+		"message": "Źródło"
+	},
+	"popupTimestamp": {
+		"message": "Data"
+	},
+	"copyTooltip": {
+		"message": "Kliknij, aby skopiować link."
+	},
+	"deleteTooltip": {
+		"message": "Kliknij, aby usunąć link."
+	},
+	"tabThis": {
+		"message": "Ta karta"
+	},
+	"tabAll": {
+		"message": "Wszystkie karty"
+	},
+	"tabPrevious": {
+		"message": "Poprzednie sesje"
+	},
+	"filterInput": {
+		"message": "Filtr:"
+	}
+}

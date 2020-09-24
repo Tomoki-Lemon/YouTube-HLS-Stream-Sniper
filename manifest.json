@@ -1,0 +1,72 @@
+{
+	"description": "__MSG_extText__",
+	"manifest_version": 2,
+	"name": "HLS Stream Capture",
+	"default_locale": "en",
+	"version": "2.2.1",
+	"permissions": [
+		"*://*/*.m3u8",
+		"*://*/*.m3u8?*",
+		"*://*/*.mpd",
+		"*://*/*.mpd?*",
+		"*://*/*.f4m",
+		"*://*/*.f4m?*",
+		"*://*/*.ism",
+		"*://*/*.ism?*",
+		"*://*/*.ism/*",
+		"*://*/*.vtt",
+		"*://*/*.vtt?*",
+		"*://*/*.mp4",
+		"*://*/*.mp4?*",
+		"*://*/*.mkv",
+		"*://*/*.mkv?*",
+		"*://*/*.mp3",
+		"*://*/*.mp3?*",
+		"*://*/*.srt",
+		"*://*/*.srt?*",
+		"*://*/*.m4a",
+		"*://*/*.m4a?*",
+		"*://*/*.webm",
+		"*://*/*.webm?*",
+		"activeTab",
+		"clipboardWrite",
+		"notifications",
+		"storage",
+		"webRequest"
+	],
+	"background": {
+		"scripts": ["background.js"]
+	},
+	"icons": {
+		"16": "img/icon-dark-16.png",
+		"48": "img/icon-dark-48.png",
+		"96": "img/icon-dark-96.png"
+	},
+	"options_ui": {
+		"browser_style": true,
+		"open_in_tab": false,
+		"page": "options/options.html"
+	},
+	"browser_action": {
+		"browser_style": true,
+		"default_title": "The Stream Detector",
+		"default_popup": "popup/popup.html",
+		"theme_icons": [
+			{
+				"dark": "img/icon-dark-96.png",
+				"light": "img/icon-light-96.png",
+				"size": 96
+			},
+			{
+				"dark": "img/icon-dark-48.png",
+				"light": "img/icon-light-48.png",
+				"size": 48
+			},
+			{
+				"dark": "img/icon-dark-16.png",
+				"light": "img/icon-light-16.png",
+				"size": 16
+			}
+		]
+	}
+}

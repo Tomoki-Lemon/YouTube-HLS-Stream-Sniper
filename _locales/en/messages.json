@@ -1,0 +1,122 @@
+{
+	"notifTitle": {
+		"message": "Stream detected!"
+	},
+	"notifText": {
+		"message": "New stream detected:\n"
+	},
+	"notifCopiedTitle": {
+		"message": "URL(s) copied!"
+	},
+	"notifCopiedText": {
+		"message": "Successfully copied the following URL(s):\n"
+	},
+	"notifIncompCopiedText": {
+		"message": "Use of youtube-dl is recommended.\n\nStream URL(s) copied in plain form due to lack of compatibility with the chosen tool:\n"
+	},
+	"notifErrorTitle": {
+		"message": "Copy error!"
+	},
+	"notifErrorText": {
+		"message": "Unable to copy URL(s):\n"
+	},
+	"extText": {
+		"message": "Formerly known as HLS Stream Detector. Detects M3U8/MPD/F4M/ISM playlists and VTT subtitles used by HLS/DASH/HDS/MSS streams. Assembles readymade youtube-dl/FFmpeg/Streamlink/hlsdl commands."
+	},
+	"copyMethod": {
+		"message": "Copy stream URL as:"
+	},
+	"url": {
+		"message": "URL only"
+	},
+	"youtubedl": {
+		"message": "youtube-dl command"
+	},
+	"youtubedlc": {
+		"message": "youtube-dlc command"
+	},
+	"ffmpeg": {
+		"message": "FFmpeg command"
+	},
+	"streamlink": {
+		"message": "Streamlink command"
+	},
+	"hlsdl": {
+		"message": "hlsdl command"
+	},
+	"user": {
+		"message": "User-defined command"
+	},
+	"streamlinkOutput": {
+		"message": "Output Streamlink to:"
+	},
+	"file": {
+		"message": "File"
+	},
+	"player": {
+		"message": "Default player"
+	},
+	"customCommand": {
+		"message": "Additional command line parameters:"
+	},
+	"userCommand": {
+		"message": "User-defined command:"
+	},
+	"userCommandTip": {
+		"message": "Available fields:\n%url%\n%filename%\n%useragent%\n%referer%\n%cookie%\n%proxy%"
+	},
+	"headersPref": {
+		"message": "Include additional headers:"
+	},
+	"notifPref": {
+		"message": "Disable notifications:"
+	},
+	"disablePref": {
+		"message": "Disable detection:"
+	},
+	"clearList": {
+		"message": "Clear this URL list"
+	},
+	"copyAll": {
+		"message": "Copy all visible URLs"
+	},
+	"proxyPref": {
+		"message": "Use HTTP proxy server:"
+	},
+	"downloaderPref": {
+		"message": "Use external downloader:"
+	},
+	"buttonClick": {
+		"message": "Browser action button functionality:"
+	},
+	"popupType": {
+		"message": "Type"
+	},
+	"popupFilename": {
+		"message": "Filename"
+	},
+	"popupSource": {
+		"message": "Source"
+	},
+	"popupTimestamp": {
+		"message": "Timestamp"
+	},
+	"copyTooltip": {
+		"message": "Click to copy URL."
+	},
+	"deleteTooltip": {
+		"message": "Click to delete URL."
+	},
+	"tabThis": {
+		"message": "This tab"
+	},
+	"tabAll": {
+		"message": "All tabs"
+	},
+	"tabPrevious": {
+		"message": "Previous sessions"
+	},
+	"filterInput": {
+		"message": "Filter:"
+	}
+}
