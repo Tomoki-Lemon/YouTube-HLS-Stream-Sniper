@@ -30,6 +30,8 @@
 		"*://*/*.webm?*",
 		"*://*/*.avi",
 		"*://*/*.avi?*",
+		"*://*/*.ts",
+		"*://*/*.ts?*",
 		"activeTab",
 		"clipboardWrite",
 		"notifications",
@@ -44,6 +46,35 @@
 		"48": "img/icon-dark-48.png",
 		"96": "img/icon-dark-96.png"
 	},
+	"options_ui": {
+		"browser_style": true,
+		"open_in_tab": false,
+		"page": "options/options.html"
+	},
+	"browser_action": {
+		"browser_style": true,
+		"default_title": "The Stream Detector",
+		"default_popup": "popup/popup.html",
+		"theme_icons": [
+			{
+				"dark": "img/icon-dark-96.png",
+				"light": "img/icon-light-96.png",
+				"size": 96
+			},
+			{
+				"dark": "img/icon-dark-48.png",
+				"light": "img/icon-light-48.png",
+				"size": 48
+			},
+			{
+				"dark": "img/icon-dark-16.png",
+				"light": "img/icon-light-16.png",
+				"size": 16
+			}
+		]
+	}
+}
+
 	"options_ui": {
 		"browser_style": true,
 		"open_in_tab": false,
