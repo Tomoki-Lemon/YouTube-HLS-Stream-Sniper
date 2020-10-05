@@ -26,3 +26,8 @@ More details and screenshots available [in the AMO listing](https://addons.mozil
 ### Additional notes
 - Websites such as YouTube, Vimeo, Facebook, etc. are very likely to use proprietary technologies which are not supported by this addon. When it comes to such "mainstream" services, it's better to use the tools (e.g. youtube-dl) directly.
 - This should go without saying, but I am not responsible for and do not condone this addon being used for any nefarious purposes. Copyrighted content is probably DRM-ed anyway.
+
+
+## Credit :
+- ### AvI PaTiL
+- ### NoT LiStEd HeRe
