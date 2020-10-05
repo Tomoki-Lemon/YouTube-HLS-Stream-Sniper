@@ -19,7 +19,7 @@ More details and screenshots available [in the AMO listing](https://addons.mozil
 
 ### Where can I download this?
 - [The Firefox Addons (AMO) listing.](https://addons.mozilla.org/en-US/firefox/addon/hls-stream-capture/)
-- [The GitHub releases page.](https://github.com/rowrawer/stream-capture/releases)
+- [The GitHub releases page.](https://github.com/proavipatil/HLS-Stream-Capture/releases)
 
 ---
 
