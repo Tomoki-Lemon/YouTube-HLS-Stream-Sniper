@@ -4,13 +4,13 @@
 This is a Firefox addon written in JavaScript which provides an easy way to keep track of URLs to playlists and subtitles used by <b>Hotstar, YouTube,Apple HLS, Adobe HDS, MPEG-DASH, and Microsoft Smooth Streaming streams.</b>
 
 ### This Addon Contains 
-• URL
-• YouTube-dlc
-• YouTube-dl
-• FFMPEG
-• StreamLink
-• HLSDL
-• User Command 
+• URL <br>
+• YouTube-dlc <br>
+• YouTube-dl <br>
+• FFMPEG <br>
+• StreamLink <br>
+• HLSDL <br>
+• User Command <br><br>
 
 
 More details and screenshots available [in the AMO listing](https://addons.mozilla.org/en-US/firefox/addon/hls-stream-capture/).
