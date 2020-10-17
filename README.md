@@ -72,3 +72,7 @@
 [5] - This Addon Is Only For Educational Purposes ...
 
 ```
+```py
+print("First Star Then Fork and Give Something More Here")
+import YouTube & HLS Stream Download
+```
