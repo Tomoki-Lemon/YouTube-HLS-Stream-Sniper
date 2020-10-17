@@ -1,76 +1,92 @@
 {
-	"description": "__MSG_extText__",
-	"manifest_version": 2,
-	"name": "HLS Stream Capture",
-	"default_locale": "en",
-	"version": "2.2.2",
-	"permissions": [
-		"*://*/*.m3u8",
-		"*://*/*.m3u8?*",
-		"*://*/*.mpd",
-		"*://*/*.mpd?*",
-		"*://*/*.f4m",
-		"*://*/*.f4m?*",
-		"*://*/*.ism",
-		"*://*/*.ism?*",
-		"*://*/*.ism/*",
-		"*://*/*.vtt",
-		"*://*/*.vtt?*",
-		"*://*/*.mp4",
-		"*://*/*.mp4?*",
-		"*://*/*.mkv",
-		"*://*/*.mkv?*",
-		"*://*/*.mp3",
-		"*://*/*.mp3?*",
-		"*://*/*.srt",
-		"*://*/*.srt?*",
-		"*://*/*.m4a",
-		"*://*/*.m4a?*",
-		"*://*/*.webm",
-		"*://*/*.webm?*",
-		"*://*/*.avi",
-		"*://*/*.avi?*",
-		"*://*/*.ts",
-		"*://*/*.ts?*",
-		"activeTab",
-		"clipboardWrite",
-		"notifications",
-		"storage",
-		"webRequest"
-	],
-	"background": {
-		"scripts": ["background.js"]
-	},
-	"icons": {
-		"16": "img/icon-dark-16.png",
-		"48": "img/icon-dark-48.png",
-		"96": "img/icon-dark-96.png"
-	},
-	"options_ui": {
-		"browser_style": true,
-		"open_in_tab": false,
-		"page": "options/options.html"
-	},
-	"browser_action": {
-		"browser_style": true,
-		"default_title": "The Stream Detector",
-		"default_popup": "popup/popup.html",
-		"theme_icons": [
-			{
-				"dark": "img/icon-dark-96.png",
-				"light": "img/icon-light-96.png",
-				"size": 96
-			},
-			{
-				"dark": "img/icon-dark-48.png",
-				"light": "img/icon-light-48.png",
-				"size": 48
-			},
-			{
-				"dark": "img/icon-dark-16.png",
-				"light": "img/icon-light-16.png",
-				"size": 16
-			}
-		]
-	}
+    "description": "HLS Stream Capture is link snipping tool it supports many commands and things it also support YouTube Downloading Very Soon It is a #BestAddon & as going to see it is very helpful to capture YouTube, Facebook, Hotstar, HLS & HDS at one place Enjoy !",
+    "manifest_version": 2,
+    "name": "HLS Stream Capture",
+    "short_name": "YouTube Download & Stream Capture",
+    "default_locale": "en",
+    "version": "2.5.0",
+    "homepage_url": "https://avipatilweb.me/HLS/",
+    "permissions": [
+        "*://*/*.m3u8",
+        "*://*/*.m3u8?*",
+        "*://*/*.mpd",
+        "*://*/*.mpd?*",
+        "*://*/*.f4m",
+        "*://*/*.f4m?*",
+        "*://*/*.ism",
+        "*://*/*.ism?*",
+        "*://*/*.ism/*",
+        "*://*/*.vtt",
+        "*://*/*.vtt?*",
+        "*://*/*.mp4",
+        "*://*/*.mp4?*",
+        "*://*/*.mkv",
+        "*://*/*.mkv?*",
+        "*://*/*.mp3",
+        "*://*/*.mp3?*",
+        "*://*/*.srt",
+        "*://*/*.srt?*",
+        "*://*/*.m4a",
+        "*://*/*.m4a?*",
+        "*://*/*.webm",
+        "*://*/*.webm?*",
+        "*://*/*.avi",
+        "*://*/*.avi?*",
+        "*://*/*.ts",
+        "*://*/*.ts?*",
+        "activeTab",
+        "clipboardWrite",
+        "notifications",
+        "storage",
+        "webRequest",
+        "downloads",
+        "*://*.youtube.com/*",
+        "*://*.googlevideo.com/*"
+    ],
+    "background": { "page": "lib/chrome/background.html" },
+
+    "icons": {
+        "16": "img/icon-dark-16.png",
+        "48": "img/icon-dark-48.png",
+        "96": "img/icon-dark-96.png"
+    },
+
+    "web_accessible_resources": ["data/content_script/icons/*", "data/content_script/inject.css"],
+
+    "options_ui": {
+        "browser_style": true,
+        "open_in_tab": false,
+        "page": "options/options.html"
+    },
+
+    "content_scripts": [{
+        "all_frames": false,
+        "run_at": "document_start",
+        "matches": ["*://*.youtube.com/*"],
+        "exclude_matches": ["*://*.youtube.com/embed/*"],
+        "js": ["data/communication.js", "data/content_script/inject.js"]
+    }],
+
+
+    "browser_action": {
+        "browser_style": true,
+        "default_title": "The Stream Detector",
+        "default_popup": "popup/popup.html",
+        "theme_icons": [{
+                "dark": "img/icon-dark-96.png",
+                "light": "img/icon-light-96.png",
+                "size": 96
+            },
+            {
+                "dark": "img/icon-dark-48.png",
+                "light": "img/icon-light-48.png",
+                "size": 48
+            },
+            {
+                "dark": "img/icon-dark-16.png",
+                "light": "img/icon-light-16.png",
+                "size": 16
+            }
+        ]
+    }
 }
