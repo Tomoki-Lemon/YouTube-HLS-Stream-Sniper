@@ -14,13 +14,13 @@
    [3] - It Also Convert Video In Any Format any Resolution Using FFMPEG
 
 ```
+### Download Addon 
 
-### Feauters
+<br>
 
-- #Best YouTube Downloader
-- HLS Stream Capture
-- YouTube MP3 Music Downloader
+[<img alt="Download" width="140px" src="https://i.ibb.co/h7X4BSS/image.png" />](https://addons.mozilla.org/en-US/firefox/addon/hls-stream-capture/)
 
+<br>
 
 ### Commands for addon
  
@@ -50,7 +50,7 @@
 ```
 
 
-More details and screenshots available [in the AMO listing](https://addons.mozilla.org/en-US/firefox/addon/hls-stream-capture/).
+More details and screenshots available [in the AMO listing]().
 
 
 
