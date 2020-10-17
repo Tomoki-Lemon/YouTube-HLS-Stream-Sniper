@@ -1,4 +1,4 @@
-# <h1 align="center">YouTube & HLS Stream Downloader</h1>
+# <h1 align="center">YouTube & HLS Stream Downloader ⭐</h1>
 
 ## Description
 
@@ -48,10 +48,6 @@
 [+] (c) Copyright Avi Patil 2020-2025.
 
 ```
-
-
-More details and screenshots available [in the AMO listing]().
-
 
 
 ### Where can I download this?
