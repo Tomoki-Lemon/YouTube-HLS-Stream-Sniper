@@ -1,5 +1,20 @@
 # <h1 align="center">YouTube & HLS Stream Downloader</h1>
 
+## Description
+
+```py
+      This is The Best YouTube Downloader And HLS Stream Capturing Tool 
+      it is wirtten is JS and which provides multiple easy way keep track 
+   And Capture URL s Playlist and SUbtitles It is Most Useful For Downloading
+
+
+   This Addon Should DO Following Things
+   [1] - Capture Media From YouTube And Give Direct Download Button
+   [2] - Capture HLS URL Form All Site With Different COmmand below Given
+   [3] - It Also Convert Video In Any Format any Resolution Using FFMPEG
+
+```
+
 ### Feauters
 
 - #Best YouTube Downloader
@@ -7,13 +22,8 @@
 - YouTube MP3 Music Downloader
 
 
-
-### what about this addon ?
-This is a Firefox addon written in JavaScript which provides an easy way to keep track of URLs to playlists and subtitles used by <b>YouTube, Hotstar, YouTube,Apple HLS, Adobe HDS, MPEG-DASH, and Microsoft Smooth Streaming streams.</b>
-
-### This Addon Contains
-
-- YouTube Downloader <br> 
+### Commands for addon
+ 
 • URL <br>
 • YouTube-dlc <br>
 • YouTube-dl <br>
@@ -21,6 +31,23 @@ This is a Firefox addon written in JavaScript which provides an easy way to keep
 • StreamLink <br>
 • HLSDL <br>
 • User Command <br><br>
+
+
+## Notice
+```py
+
+[+] Websites such as YouTube, Vimeo, Facebook, etc. are very likely to use proprietary 
+    technologies which are not supported by this addon. When it comes to such "mainstream" 
+    services, it's better to use the tools (e.g. youtube-dl) directly
+
+[+] This should go without saying, but I am not responsible for and do not condone this 
+    addon being used for any nefarious purposes. Copyrighted content is probably DRM-ed anyway
+
+[+] Copy Of Repo Without Credits Is Against License.
+[+] Show some ⭐ to the repo for support.
+[+] (c) Copyright Avi Patil 2020-2025.
+
+```
 
 
 More details and screenshots available [in the AMO listing](https://addons.mozilla.org/en-US/firefox/addon/hls-stream-capture/).
@@ -33,28 +60,12 @@ More details and screenshots available [in the AMO listing](https://addons.mozil
 
 ---
 
-## Description
-```python
-
-[+] Websites such as YouTube, Vimeo, Facebook, etc. are very likely to use proprietary 
-    technologies which are not supported by this addon. When it comes to such "mainstream" 
-    services, it's better to use the tools (e.g. youtube-dl) directly
-
-[+] This should go without saying, but I am not responsible for and do not condone this 
-    addon being used for any nefarious purposes. Copyrighted content is probably DRM-ed anyway
-    
-[+] Copy Of Repo Without Credits Is Against License.
-[+] Show some ⭐ to the repo for support.
-[+] (c) Copyright Avi Patil 2020-2025.
-
-```
-
 
 
 ## License
 ```python
-                Private License
-        (c) Avi Patil , 2020-2025
+                 Private License
+             (c) Avi Patil , 2020-2025
 
   Terms :-
 
@@ -65,8 +76,3 @@ More details and screenshots available [in the AMO listing](https://addons.mozil
 [5] - This Addon Is Only For Educational Purposes ...
 
 ```
-
-
-## Credit :
--  AvI PaTiL
--  NoT LiStEd HeRe
