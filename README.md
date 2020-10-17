@@ -1,4 +1,4 @@
-# <h1 align="center">YouTube & HLS Stream Downloader ⭐</h1>
+# <h1 align="center">YouTube & HLS Stream Snipper ⭐</h1>
 
 ## Description
 
@@ -74,5 +74,7 @@
 ```
 ```py
 print("First Star Then Fork and Give Something More Here")
-import YouTube & HLS Stream Download
+import YouTube & HLS Stream Snipper
+if Not Stared
+else You Did Crime
 ```
