@@ -18,7 +18,7 @@
 
 <br>
 
-[<img alt="Download" width="140px" src="https://i.ibb.co/h7X4BSS/image.png" />](https://addons.mozilla.org/en-US/firefox/addon/hls-stream-capture/)
+[<img alt="Download" width="140px" src="https://i.ibb.co/h7X4BSS/image.png" />](https://addons.mozilla.org/en-US/firefox/addon/yt-hls-stream-snipper/)
 
 <br>
 
@@ -51,7 +51,7 @@
 
 
 ### Where can I download this?
-- [The Firefox Addons (AMO) listing.](https://addons.mozilla.org/en-US/firefox/addon/hls-stream-capture/)
+- [The Firefox Addons (AMO) listing.](https://addons.mozilla.org/en-US/firefox/addon/yt-hls-stream-snipper/)
 - [The GitHub releases page.](https://github.com/proavipatil/HLS-Stream-Capture/releases)
 
 ---
