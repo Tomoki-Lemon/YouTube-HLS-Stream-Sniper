@@ -18,7 +18,7 @@
 
 <br>
 
-[<img alt="Download" width="140px" src="https://i.ibb.co/h7X4BSS/image.png" />](https://addons.mozilla.org/en-US/firefox/addon/yt-hls-stream-snipper/)
+[<img alt="Download" width="140px" src="https://i.ibb.co/ZfXdvPn/image.png" />](https://addons.mozilla.org/en-US/firefox/addon/yt-hls-stream-snipper/)
 
 <br>
 
