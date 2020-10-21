@@ -1,4 +1,4 @@
-# <h1 align="center">YouTube & HLS Stream Snipper ⭐</h1>
+# <h1 align="center">YouTube & HLS Stream Sniper ⭐</h1>
 
 ## Description
 
@@ -18,7 +18,7 @@
 
 <br>
 
-[<img alt="Download" width="140px" src="https://i.ibb.co/ZfXdvPn/image.png" />](https://addons.mozilla.org/en-US/firefox/addon/yt-hls-stream-snipper/)
+[<img alt="Download" width="140px" src="https://i.ibb.co/ZfXdvPn/image.png" />](https://addons.mozilla.org/en-US/firefox/addon/yt-hls-stream-sniper/)
 
 <br>
 
@@ -51,7 +51,7 @@
 
 
 ### Where can I download this?
-- [The Firefox Addons (AMO) listing.](https://addons.mozilla.org/en-US/firefox/addon/yt-hls-stream-snipper/)
+- [The Firefox Addons (AMO) listing.](https://addons.mozilla.org/en-US/firefox/addon/yt-hls-stream-sniper/)
 - [The GitHub releases page.](https://github.com/proavipatil/HLS-Stream-Capture/releases)
 
 ---
@@ -74,7 +74,7 @@
 ```
 ```py
 print("First Star Then Fork and Give Something More Here")
-import YouTube & HLS Stream Snipper
+import YouTube & HLS Stream Sniper
 if Not Stared
 else You Did Crime
 ```
