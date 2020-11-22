@@ -1,7 +1,0 @@
-This add-on uses the following open-source projects:
-
-sig.js: https://raw.githubusercontent.com/fent/node-ytdl-core/v2.1.2/lib/sig.js
-util.js: https://raw.githubusercontent.com/fent/node-ytdl-core/v2.1.2/lib/util.js
-info.js: https://raw.githubusercontent.com/fent/node-ytdl-core/v2.1.2/lib/info.js
-formats.js: https://raw.githubusercontent.com/fent/node-ytdl-core/v2.1.2/lib/formats.js
-info-extras.js: https://raw.githubusercontent.com/fent/node-ytdl-core/v2.1.2/lib/info-extras.js
