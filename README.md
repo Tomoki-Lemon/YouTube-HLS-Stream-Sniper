@@ -18,7 +18,7 @@
 
 <br>
 
-[<img alt="Download" width="140px" src="https://i.ibb.co/ZfXdvPn/image.png" />](https://addons.mozilla.org/en-US/firefox/addon/yt-hls-stream-sniper/)
+[<img alt="Download" width="140px" src="https://i.ibb.co/ZfXdvPn/image.png" />](https://addons.mozilla.org/en-US/firefox/addon/hls-stream-sniper/)
 
 <br>
 
@@ -51,7 +51,7 @@
 
 
 ### Where can I download this?
-- [The Firefox Addons (AMO) listing.](https://addons.mozilla.org/en-US/firefox/addon/yt-hls-stream-sniper/)
+- [The Firefox Addons (AMO) listing.](https://addons.mozilla.org/en-US/firefox/addon/hls-stream-sniper/)
 - [The GitHub releases page.](https://github.com/proavipatil/HLS-Stream-Capture/releases)
 
 ---
