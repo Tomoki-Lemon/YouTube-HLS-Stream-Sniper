@@ -1,4 +1,5 @@
 var page = {
+  "dom": '',
   "root": "data/content_script/",
   "interval": {"action": null, "button": null},
   "format": {
@@ -7,20 +8,6 @@ var page = {
       if (s >= Math.pow(2, 20)) return (s / Math.pow(2, 20)).toFixed(1) + "MB";
       if (s >= Math.pow(2, 10)) return (s / Math.pow(2, 10)).toFixed(1) + "KB";
       return s + "B";
-    }
-  },
-  "download": {
-    "ul": {"id": "ydl-page-ul-id"},
-    "icon": {"id": "ydl-page-icon-id"},
-    "button": {"id": "ydl-page-button-id"},
-    "url": function () {
-      var icon = document.getElementById(page.download.icon.id);
-      if (icon) {
-        background.send("page:catch-download-url", {"url": document.location.href});
-        var url = chrome.runtime.getURL(page.root + "icons/loader.gif");
-        icon.style.background = "url(" + url + ") no-repeat center center";
-        icon.style.backgroundSize = "16px";
-      }
     }
   },
   "action": function () {
@@ -35,6 +22,182 @@ var page = {
           button.addEventListener("click", function () {page.menu.ul ? page.menu.hide() : page.download.url()}, false);
         }
       }, 300);
+    }
+  },
+  "download": {
+    "ul": {"id": "ydl-page-ul-id"},
+    "icon": {"id": "ydl-page-icon-id"},
+    "button": {"id": "ydl-page-button-id"},
+    "url": function () {
+      var icon = document.getElementById(page.download.icon.id);
+      if (icon) {
+        var url = chrome.runtime.getURL(page.root + "icons/loader.gif");
+        icon.style.background = "url(" + url + ") no-repeat center center";
+        icon.style.backgroundSize = "16px";
+        /*  */
+        page.extract.download.urls(document.location.href).then(list => {
+          var icon = document.getElementById(page.download.icon.id);
+          if (icon && list.formats && list.formats.length > 0) {
+            var url = chrome.runtime.getURL(page.root + "icons/download.png");
+            icon.style.background = "url(" + url + ") no-repeat center center";
+            icon.style.backgroundSize = "16px";
+            /*  */
+            page.menu.show(list.title, list.formats);
+          }
+        });
+      }
+    }
+  },
+  "extract": {
+    "download": {
+      "urls": async href => {
+        return window.info.getInfo(href, {}).then(async o => {
+          if (o.videoDetails === undefined) {
+            var packed = JSON.stringify(o);
+            if (packed) {
+              var date = /publishDate":"([^"]+)"/.exec(packed);
+              /*  */
+              o.videoDetails = {
+                "author": {},
+                "title": o.title,
+                "videoId": o["video_id"],
+                "publishDate": date ? date[1] : "NA"
+              };
+              /*  */
+              if (o.author) {
+                o.videoDetails.author.name = o.author.name || o.author;
+              } else {
+                var b = /"author":"([^"]+)"/.exec(packed);
+                if (b) {
+                  o.videoDetails.author.name = b[1];
+                }
+              }
+            }
+          }
+          /*  */
+          for (var format of o.formats) {
+            try {
+              if (format.isDashMPD) {
+                if (!page.dom) {
+                  var parser = new DOMParser();
+                  var content = await fetch(format.url).then(r => r.text());
+                  page.dom = parser.parseFromString(content, "text/xml");
+                }
+                /*  */
+                var rep = [...page.dom.querySelectorAll("Representation")];
+                var node = rep.filter(node => node.id === format.itag.toString()).shift();
+                if (node) {
+                  try {
+                    var base = node.querySelector("BaseURL").textContent;
+                    format.url = [...node.querySelectorAll("SegmentList *")].map(e => {
+                      return base + (e.attributes.sourceURL || e.attributes.media).value;
+                    });
+                  } catch (e) {
+                    console.warn("Unable to Parse", node);
+                  }
+                }
+              }
+            }
+            catch (e) {
+              console.warn("Cannot parse DashMPD", e);
+            }
+          }
+          /*  */
+          o.formats = o.formats.filter(f => {
+            var cond1 = f.isLive === false;
+            var cond2 = f.isHLS === false;
+            var cond3 = f.mimeType.startsWith("video/");
+            var cond4 = f.mimeType.startsWith("audio/");
+            /*  */
+            return cond1 && cond2 && (cond3 || cond4);
+          });
+          /*  */
+          o.formats = o.formats.map(f => {
+            var cond1 = f.bitrate;
+            var cond2 = !f.audioBitrate;
+            var cond3 = f.mimeType.startsWith("audio/");
+            /*  */
+            if (cond1 && cond2 && cond3) {
+              var rates = [32, 96, 128, 192, 256, 320];
+              var ds = rates.map(v => Math.abs(v - f.bitrate / 1000));
+              var index = ds.indexOf(Math.min(...ds));
+              f.audioBitrate = rates[index];
+            }
+            /*  */
+            return f;
+          }).sort((a, b) => {
+            if (a.mimeType.startsWith("audio/") && b.mimeType.startsWith("audio/")) {
+              return b.audioBitrate - a.audioBitrate;
+            }
+          });
+          /*  */
+          o.title = o.videoDetails.title;
+          /*  */
+          return o;
+        });
+      }
+    }
+  },
+  "button": {
+    "style": {"id": "ydl-page-button-style-id"},
+    "insert": function () {
+      var render = function (a, b) {
+        var link = document.getElementById(page.button.style.id);
+        if (!link) {
+          link = document.createElement("link");
+          link.setAttribute("type", "text/css");
+          link.setAttribute("rel", "stylesheet");
+          link.setAttribute("class", "ydl-button");
+          link.setAttribute("id", page.button.style.id);
+          link.setAttribute("href", chrome.runtime.getURL(page.root + "inject.css"));
+          var head = document.documentElement || document.head || document.querySelector("head");
+          if (head) head.appendChild(link);
+        }
+        /*  */
+        var button = document.createElement("div");
+        button.setAttribute("class", a);
+        button.setAttribute("type", "button");
+        button.setAttribute("role", "button");
+        button.setAttribute("id", page.download.button.id);
+        button.setAttribute("title", "Download this video");
+        /*  */
+        var icon = document.createElement("div");
+        icon.setAttribute("id", page.download.icon.id);
+        icon.setAttribute("class", b + "ytd-toggle-button-renderer");
+        icon.style.background = "url(" + chrome.runtime.getURL(page.root + "icons/download.png") + ") no-repeat center center";
+        icon.style.backgroundSize = "16px";
+        /*  */
+        button.appendChild(icon);
+        return button;
+      };
+      /*  */
+      var download = null;
+      var manager = document.querySelector("#page-manager");
+      var sentiment = document.querySelector("#watch8-sentiment-actions");
+      var secondary = document.querySelector("#watch8-secondary-actions");
+      var slimvideo = document.querySelector(".slim-video-metadata-actions");
+      /*  */
+      if (manager) { // #1
+        var container = manager.querySelector('#menu-container');
+        if (container) {
+          var buttons = container.querySelector('#top-level-buttons');
+          if (buttons) {
+            download = render("style-scope ytd-menu-renderer force-icon-button style-text", "style-scope ");
+            buttons.insertBefore(download, buttons.firstChild);
+          }
+        }
+      } else if (sentiment) { // #2
+        download = render("ydl-page-button-class-old", '');
+        sentiment.insertBefore(download, sentiment.firstChild);
+      } else if (secondary) { // #3
+        download = render("ydl-page-button-class-old", '');
+        secondary.insertBefore(download, secondary.lastChild);
+      } else if (slimvideo) { // mobile
+        download = render("ydl-page-button-class-mobile", '');
+        slimvideo.insertBefore(download, slimvideo.firstChild);
+      }
+      /*  */
+      return download;
     }
   },
   "menu": {
@@ -52,7 +215,7 @@ var page = {
       page.menu.ul.setAttribute("id", page.download.ul.id);
       page.menu.ul.setAttribute("class", "ydl-dropdown-material");
       var max = parseInt(window.getComputedStyle(document.body).width);
-      title = title.replace(/[`~!@#$%^&*()|+=?;:'",<>{}[\]\\/]/gi, '_').replace(/[\\/:*?"<>|]/g, '_').substring(0, 240);
+      title = (title || document.title).replace(/[`~!@#$%^&*()|+=?;:'",<>{}[\]\\/]/gi, '_').replace(/[\\/:*?"<>|]/g, '_').replace(/ /g, '').substring(0, 32);
       /*  */
       var addmenuitem = function (o, i, t) {
         var header = t === "header";
@@ -179,80 +342,8 @@ var page = {
       page.menu.ul.setAttribute("style", style);
       document.body.appendChild(page.menu.ul);
     }
-  },
-  "button": {
-    "style": {"id": "ydl-page-button-style-id"},
-    "insert": function () {
-      var render = function (a, b) {
-        var link = document.getElementById(page.button.style.id);
-        if (!link) {
-          link = document.createElement("link");
-          link.setAttribute("type", "text/css");
-          link.setAttribute("rel", "stylesheet");
-          link.setAttribute("class", "ydl-button");
-          link.setAttribute("id", page.button.style.id);
-          link.setAttribute("href", chrome.runtime.getURL(page.root + "inject.css"));
-          var head = document.documentElement || document.head || document.querySelector("head");
-          if (head) head.appendChild(link);
-        }
-        /*  */
-        var button = document.createElement("div");
-        button.setAttribute("class", a);
-        button.setAttribute("type", "button");
-        button.setAttribute("role", "button");
-        button.setAttribute("id", page.download.button.id);
-        button.setAttribute("title", "Download this video");
-        /*  */
-        var icon = document.createElement("div");
-        icon.setAttribute("id", page.download.icon.id);
-        icon.setAttribute("class", b + "ytd-toggle-button-renderer");
-        icon.style.background = "url(" + chrome.runtime.getURL(page.root + "icons/download.png") + ") no-repeat center center";
-        icon.style.backgroundSize = "16px";
-        /*  */
-        button.appendChild(icon);
-        return button;
-      };
-      /*  */
-      var download = null;
-      var manager = document.querySelector("#page-manager");
-      var sentiment = document.querySelector("#watch8-sentiment-actions");
-      var secondary = document.querySelector("#watch8-secondary-actions");
-      var slimvideo = document.querySelector(".slim-video-metadata-actions");
-      /*  */
-      if (manager) { // #1
-        var container = manager.querySelector('#menu-container');
-        if (container) {
-          var buttons = container.querySelector('#top-level-buttons');
-          if (buttons) {
-            download = render("style-scope ytd-menu-renderer force-icon-button style-text", "style-scope ");
-            buttons.insertBefore(download, buttons.firstChild);
-          }
-        }
-      } else if (sentiment) { // #2
-        download = render("ydl-page-button-class-old", '');
-        sentiment.insertBefore(download, sentiment.firstChild);
-      } else if (secondary) { // #3
-        download = render("ydl-page-button-class-old", '');
-        secondary.insertBefore(download, secondary.lastChild);
-      } else if (slimvideo) { // mobile
-        download = render("ydl-page-button-class-mobile", '');
-        slimvideo.insertBefore(download, slimvideo.firstChild);
-      }
-      /*  */
-      return download;
-    }
   }
 };
-
-background.receive("page:make-dropdown-menu", function (e) {
-  var icon = document.getElementById(page.download.icon.id);
-  if (icon && e.menu.length > 0) {
-    var url = chrome.runtime.getURL(page.root + "icons/download.png");
-    icon.style.background = "url(" + url + ") no-repeat center center";
-    icon.style.backgroundSize = "16px";
-    page.menu.show(e.title, e.menu);
-  }
-});
 
 background.receive("page:set-video-size", function (e) {  
   var spans = document.querySelectorAll("span[ydl-d-u]");
