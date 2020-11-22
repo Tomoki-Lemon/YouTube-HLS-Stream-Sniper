@@ -57,7 +57,11 @@
         "96": "img/icon-dark-96.png"
     },
 
-    "web_accessible_resources": ["data/content_script/icons/*", "data/content_script/inject.css"],
+    "web_accessible_resources": [
+    "data/content_script/icons/*",
+    "data/content_script/inject.css",
+    "data/content_script/resources/vendor/*"
+  ],
 
     "options_ui": {
         "browser_style": true,
@@ -70,7 +74,11 @@
         "run_at": "document_start",
         "matches": ["*://*.youtube.com/*"],
         "exclude_matches": ["*://*.youtube.com/embed/*"],
-        "js": ["data/communication.js", "data/content_script/inject.js"]
+         "js": [
+         "data/communication.js",
+         "data/content_script/inject.js",
+         "data/content_script/resources/require.js"
+    ]
     }],
 
 
