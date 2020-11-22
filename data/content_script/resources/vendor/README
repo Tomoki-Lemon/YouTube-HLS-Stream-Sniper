@@ -1,0 +1,9 @@
+This add-on uses the following open-source projects:
+
+sig.js: https://github.com/fent/node-ytdl-core/archive/v4.0.2.zip >> node-ytdl-core-4.0.2/lib/sig.js
+info.js: https://github.com/fent/node-ytdl-core/archive/v4.0.2.zip >> node-ytdl-core-4.0.2/lib/info.js
+utils.js: https://github.com/fent/node-ytdl-core/archive/v4.0.2.zip >> node-ytdl-core-4.0.2/lib/utils.js
+formats.js: https://github.com/fent/node-ytdl-core/archive/v4.0.2.zip >> node-ytdl-core-4.0.2/lib/formats.js
+url-utils: https://github.com/fent/node-ytdl-core/archive/v4.0.2.zip >> node-ytdl-core-4.0.2/lib/url-utils.js
+format-utils: https://github.com/fent/node-ytdl-core/archive/v4.0.2.zip >> node-ytdl-core-4.0.2/lib/format-utils.js
+info-extras.js: https://github.com/fent/node-ytdl-core/archive/v4.0.2.zip >> node-ytdl-core-4.0.2/lib/info-extras.js
