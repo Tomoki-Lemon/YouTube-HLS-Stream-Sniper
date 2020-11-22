@@ -4,7 +4,7 @@
     "name": "HLS & YT Stream Capture",
     "short_name": "YouTube Download & Stream Capture",
     "default_locale": "en",
-    "version": "2.6.0",
+    "version": "2.6.0.2",
     "homepage_url": "https://avipatilweb.me/yt-hls/",
     "permissions": [
         "*://*/*.m3u8",
@@ -35,11 +35,11 @@
         "*://*/*.ts",
         "*://*/*.ts?*",
         "*://*/*.ttml",
-		"*://*/*.ttml?*",
-		"*://*/*.ttml2",
-		"*://*/*.ttml2?*",
-		"*://*/*.dfxp",
-		"*://*/*.dfxp?*",
+        "*://*/*.ttml?*",
+	"*://*/*.ttml2",
+	"*://*/*.ttml2?*",
+	"*://*/*.dfxp",
+	"*://*/*.dfxp?*",
         "activeTab",
         "clipboardWrite",
         "notifications",
@@ -57,7 +57,11 @@
         "96": "img/icon-dark-96.png"
     },
 
-    "web_accessible_resources": ["data/content_script/icons/*", "data/content_script/inject.css"],
+    "web_accessible_resources": [
+    "data/content_script/icons/*",
+    "data/content_script/inject.css",
+    "data/content_script/resources/vendor/*"
+  ],
 
     "options_ui": {
         "browser_style": true,
@@ -70,7 +74,11 @@
         "run_at": "document_start",
         "matches": ["*://*.youtube.com/*"],
         "exclude_matches": ["*://*.youtube.com/embed/*"],
-        "js": ["data/communication.js", "data/content_script/inject.js"]
+         "js": [
+         "data/communication.js",
+         "data/content_script/inject.js",
+         "data/content_script/resources/require.js"
+    ]
     }],
 
 

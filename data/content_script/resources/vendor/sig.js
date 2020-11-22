@@ -1,10 +1,11 @@
 const url = require('url');
 const miniget = require('miniget');
 const querystring = require('querystring');
+const Cache = require('./cache');
 
 
 // A shared cache to keep track of html5player.js tokens.
-exports.cache = new Map();
+exports.cache = new Cache();
 
 
 /**
@@ -14,21 +15,15 @@ exports.cache = new Map();
  * @param {Object} options
  * @returns {Promise<Array.<string>>}
  */
-exports.getTokens = async(html5playerfile, options) => {
-  let cachedTokens = exports.cache.get(html5playerfile);
-  if (cachedTokens) {
-    return cachedTokens;
-  } else {
-    let [, body] = await miniget.promise(html5playerfile, options.requestOptions);
-    const tokens = exports.extractActions(body);
-    if (!tokens || !tokens.length) {
-      throw Error('Could not extract signature deciphering actions');
-    }
-
-    exports.cache.set(html5playerfile, tokens);
-    return tokens;
+exports.getTokens = (html5playerfile, options) => exports.cache.getOrSet(html5playerfile, async() => {
+  let body = await miniget(html5playerfile, options.requestOptions).text();
+  const tokens = exports.extractActions(body);
+  if (!tokens || !tokens.length) {
+    throw Error('Could not extract signature deciphering actions');
   }
-};
+  exports.cache.set(html5playerfile, tokens);
+  return tokens;
+});
 
 
 /**
@@ -104,16 +99,14 @@ const actionsObjRegexp = new RegExp(
     jsKeyStr}${sliceStr}|${
     jsKeyStr}${spliceStr}|${
     jsKeyStr}${swapStr
-  }),?\\r?\\n?)+)\\};`,
-);
+  }),?\\r?\\n?)+)\\};`);
 const actionsFuncRegexp = new RegExp(`${`function(?: ${jsVarStr})?\\(a\\)\\{` +
     `a=a\\.split\\(${jsEmptyStr}\\);\\s*` +
     `((?:(?:a=)?${jsVarStr}`}${
   jsPropStr
 }\\(a,\\d+\\);)+)` +
     `return a\\.join\\(${jsEmptyStr}\\)` +
-  `\\}`,
-);
+  `\\}`);
 const reverseRegexp = new RegExp(`(?:^|,)(${jsKeyStr})${reverseStr}`, 'm');
 const sliceRegexp = new RegExp(`(?:^|,)(${jsKeyStr})${sliceStr}`, 'm');
 const spliceRegexp = new RegExp(`(?:^|,)(${jsKeyStr})${spliceStr}`, 'm');
@@ -196,25 +189,18 @@ exports.extractActions = body => {
 /**
  * @param {Object} format
  * @param {string} sig
- * @param {boolean} debug
  */
-exports.setDownloadURL = (format, sig, debug) => {
+exports.setDownloadURL = (format, sig) => {
   let decodedUrl;
   if (format.url) {
     decodedUrl = format.url;
   } else {
-    if (debug) {
-      console.warn(`Download url not found for itag ${format.itag}`); // eslint-disable-line no-console
-    }
     return;
   }
 
   try {
     decodedUrl = decodeURIComponent(decodedUrl);
   } catch (err) {
-    if (debug) {
-      console.warn(`Could not decode url: ${err.message}`); // eslint-disable-line no-console
-    }
     return;
   }
 
@@ -234,11 +220,7 @@ exports.setDownloadURL = (format, sig, debug) => {
     // When YouTube provides a `sp` parameter the signature `sig` must go
     // into the parameter it specifies.
     // See https://github.com/fent/node-ytdl-core/issues/417
-    if (format.sp) {
-      query[format.sp] = sig;
-    } else {
-      query.signature = sig;
-    }
+    query[format.sp || 'signature'] = sig;
   }
 
   format.url = url.format(parsedUrl);
@@ -249,10 +231,12 @@ exports.setDownloadURL = (format, sig, debug) => {
  * Applies `sig.decipher()` to all format URL's.
  *
  * @param {Array.<Object>} formats
- * @param {Array.<string>} tokens
- * @param {boolean} debug
+ * @param {string} html5player
+ * @param {Object} options
  */
-exports.decipherFormats = (formats, tokens, debug) => {
+exports.decipherFormats = async(formats, html5player, options) => {
+  let decipheredFormats = {};
+  let tokens = await exports.getTokens(html5player, options);
   formats.forEach(format => {
     let cipher = format.signatureCipher || format.cipher;
     if (cipher) {
@@ -261,6 +245,8 @@ exports.decipherFormats = (formats, tokens, debug) => {
       delete format.cipher;
     }
     const sig = tokens && format.s ? exports.decipher(tokens, format.s) : null;
-    exports.setDownloadURL(format, sig, debug);
+    exports.setDownloadURL(format, sig);
+    decipheredFormats[format.url] = format;
   });
+  return decipheredFormats;
 };
