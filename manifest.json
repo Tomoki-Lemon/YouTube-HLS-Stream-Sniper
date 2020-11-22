@@ -4,7 +4,7 @@
     "name": "HLS & YT Stream Capture",
     "short_name": "YouTube Download & Stream Capture",
     "default_locale": "en",
-    "version": "2.7.0,
+    "version": "2.7.0",
     "homepage_url": "https://avipatilweb.me/yt-hls/",
     "permissions": [
         "*://*/*.m3u8",
