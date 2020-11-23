@@ -1,6 +1,6 @@
-# <h1 align="center">YouTube & HLS Stream Sniper ⭐</h1>
+# <h1 align="center">⚔️ YouTube & HLS Stream Sniper ⚔️</h1>
 
-## Description
+## 🔥 Description
 
 ```py
       This is The Best YouTube Downloader And HLS Stream Capturing Tool 
@@ -15,7 +15,7 @@
 
 ```
 <br><br>
-<h2 align="center"> Download Addon Here</h2>
+<h2 align="center"> Download Addon Here 👇👇</h2>
 
 <br>
 <p align="center">
@@ -23,7 +23,19 @@
 
 <br>
 
-### Commands for addon
+<h2>⏱️ Upcoming Features</h2>
+
+- [ ] Changing UI/UX <br>
+- [ ] Sprate links as Type and Quality <br>
+- [ ] Playlist extraction <br>
+- [ ] Adding More Function and Easy To Use <br>
+- [ ] Search for URLS <br>
+- [ ] Direct Download Option For URLs
+
+---
+
+
+### 🎈 Commands for addon
  
 • URL <br>
 • YouTube-dlc <br>
@@ -34,7 +46,7 @@
 • User Command <br><br>
 
 
-## Notice
+## ⚠️ Notice ⚠️
 ```py
 
 [+] Websites such as YouTube, Vimeo, Facebook, etc. are very likely to use proprietary 
