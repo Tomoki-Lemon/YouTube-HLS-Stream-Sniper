@@ -14,11 +14,12 @@
    [3] - It Also Convert Video In Any Format any Resolution Using FFMPEG
 
 ```
-### Download Addon 
+<br><br>
+<h2 align="center"> Download Addon Here</h2>
 
 <br>
-
-[<img alt="Download" width="140px" src="https://i.ibb.co/ZfXdvPn/image.png" />](https://addons.mozilla.org/en-US/firefox/addon/hls-stream-sniper/)
+<p align="center">
+<a href="https://addons.mozilla.org/en-US/firefox/addon/hls-stream-sniper/" ><img alt="Download" width="150px" text-align="cneter" src="https://i.ibb.co/ZfXdvPn/image.png" /></a></p>
 
 <br>
 
