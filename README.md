@@ -25,7 +25,7 @@
 
 <h2>⏱️ Upcoming Features</h2>
 
-- [ ] Changing UI/UX <br>
+✅ Changing UI/UX <br>
 - [ ] Sprate links as Type and Quality <br>
 - [ ] Playlist extraction <br>
 - [ ] Adding More Function and Easy To Use <br>
@@ -71,10 +71,10 @@
 
 
 
-## License
+## 🚸 License
 ```python
                  Private License
-             (c) Avi Patil , 2020-2025
+             ©️ Avi Patil , 2020-2025
 
   Terms :-
 
