@@ -31,6 +31,7 @@
 - [ ] Adding More Function and Easy To Use <br>
 - [ ] Search for URLS <br>
 - [ ] Direct Download Option For URLs
+- [ ] URL Detection Routine 
 
 ---
 
