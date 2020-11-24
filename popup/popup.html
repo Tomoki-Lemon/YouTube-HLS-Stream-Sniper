@@ -19,6 +19,7 @@
 			body {
 		    font-family: 'Varela Round', sans-serif;
 				margin-right: 32px; 	/* addon popup vertical scrollbar workaround */
+
 			}
 
 			table {
@@ -49,7 +50,7 @@
 
 			input,
 			select {
-				margin: auto 0.25em;
+				margin: auto 0.25em;	
 			}
 
 			.glow-on-hover {
@@ -59,7 +60,7 @@
 			    outline: none;
 			    color: #fff;
 			    background: #111;
-			    cursor: pointer;
+			    cursor: grab;
 			    position: relative;
 			    z-index: 0;
 			    border-radius: 10px;
@@ -88,6 +89,7 @@
 
 			.glow-on-hover:active:after {
 			    background: transparent;
+			    cursor: grabbing; 
 			}
 
 			.glow-on-hover:hover:before {
@@ -103,7 +105,7 @@
 			    background: #111;
 			    left: 0;
 			    top: 0;
-			    border-radius: 10px;
+			    border-radius: 10px;	 
 			}
 
 			@keyframes glowing {
@@ -143,8 +145,8 @@
 	  border-radius: 10px;
 
 	  outline: none;
-	  cursor: pointer;
 	  padding: 0 15px;
+	 cursor: pointer;
 
 	}
 
@@ -241,8 +243,8 @@
 				</tr>
 			</tbody>
 		</table>
-		<footer style="text-align: center; margin-top:7px; margin-bottom: 3px; font-size: 12px;"><strong>
-			© 2020 AviPatil</strong>
+		<footer style="text-align: center; margin-top:7px; margin-bottom: 3px; font-size: 12px;"><a href="https://avipatilweb.me/" style="color: orange; text-decoration: none;"><strong>
+			© 2020 AviPatil</strong></a>
 		</footer>
 
 		<script src="popup.js"></script>
