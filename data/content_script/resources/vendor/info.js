@@ -11,10 +11,6 @@ const Cache = require('./cache');
 
 
 const VIDEO_URL = 'https://www.youtube.com/watch?v=';
-const EMBED_URL = 'https://www.youtube.com/embed/';
-const VIDEO_EURL = 'https://youtube.googleapis.com/v/';
-const INFO_HOST = 'www.youtube.com';
-const INFO_PATH = '/get_video_info';
 
 
 // Cached for storing basic/full info.
@@ -23,60 +19,57 @@ exports.cookieCache = new Cache(1000 * 60 * 60 * 24);
 exports.watchPageCache = new Cache();
 
 
+// Special error class used to determine if an error is unrecoverable,
+// as in, ytdl-core should not try again to fetch the video metadata.
+// In this case, the video is usually unavailable in some way.
+class UnrecoverableError extends Error {}
+
+
+// List of URLs that show up in `notice_url` for age restricted videos.
+const AGE_RESTRICTED_URLS = [
+  'support.google.com/youtube/?p=age_restrictions',
+  'youtube.com/t/community_guidelines',
+];
+
+
 /**
  * Gets info from a video without getting additional formats.
  *
  * @param {string} id
  * @param {Object} options
  * @returns {Promise<Object>}
- */
+*/
 exports.getBasicInfo = async(id, options) => {
-  let info = await getJSONWatchPage(id, options);
-  let player_response =
-    (info.player && info.player.args && info.player.args.player_response) ||
-    info.player_response || info.playerResponse;
-  player_response = parseJSON('watch.json `player_response`', player_response);
-  let html5player = info.player && info.player.assets && info.player.assets.js;
-
-  let playErr = utils.playError(player_response, ['ERROR']);
-  let privateErr = privateVideoError(player_response);
-  if (playErr) {
-    throw playErr || privateErr;
-  }
-
-  let age_restricted = false;
-  if (!player_response || (!player_response.streamingData &&
-    !utils.playError(player_response, ['UNPLAYABLE']) && !isRental(player_response))) {
-    // If the video page doesn't work, maybe because it has mature content.
-    // and requires an account logged in to view, try the embed page.
-    let [embedded_player_response, embedbody] = await getEmbedPage(id, options);
-    playErr = utils.playError(player_response, ['LOGIN_REQUIRED']);
-    if (!embedded_player_response && playErr) {
-      throw playErr;
+  const retryOptions = Object.assign({}, miniget.defaultOptions, options.requestOptions);
+  const validate = info => {
+    let playErr = utils.playError(info.player_response, ['ERROR'], UnrecoverableError);
+    let privateErr = privateVideoError(info.player_response);
+    if (playErr || privateErr) {
+      throw playErr || privateErr;
     }
-    player_response = embedded_player_response;
-    html5player = html5player || getHTML5player(embedbody);
-    age_restricted = true;
-  }
-
-  if (!player_response || (!player_response.streamingData && !isRental(player_response))) {
-    player_response = await getVideoInfoPage(id, options, info);
-  }
+    return info && (
+      info.player_response.streamingData || isRental(info.player_response) || isNotYetBroadcasted(info.player_response)
+    );
+  };
+  let info = await pipeline([id, options], validate, retryOptions, [
+    getJSONWatchPage,
+    getEmbedPage,
+    getVideoInfoPage,
+  ]);
 
   Object.assign(info, {
-    player_response,
-    html5player,
-    formats: parseFormats(player_response),
+    formats: parseFormats(info.player_response),
     related_videos: extras.getRelatedVideos(info),
   });
 
   // Add additional properties to info.
+  const media = extras.getMedia(info);
   let additional = {
     author: extras.getAuthor(info),
-    media: extras.getMedia(info),
+    media,
     likes: extras.getLikes(info),
     dislikes: extras.getDislikes(info),
-    age_restricted,
+    age_restricted: !!(media && media.notice_url && AGE_RESTRICTED_URLS.some(url => media.notice_url.includes(url))),
 
     // Give the standard link to the video.
     video_url: VIDEO_URL + id,
@@ -89,12 +82,11 @@ exports.getBasicInfo = async(id, options) => {
   return info;
 };
 
-
 const privateVideoError = player_response => {
-  let playability = player_response.playabilityStatus;
-  if (playability.status === 'LOGIN_REQUIRED' && playability.messages &&
+  let playability = player_response && player_response.playabilityStatus;
+  if (playability && playability.status === 'LOGIN_REQUIRED' && playability.messages &&
     playability.messages.filter(m => /This is a private video/.test(m)).length) {
-    return Error(playability.reason || (playability.messages && playability.messages[0]));
+    return new UnrecoverableError(playability.reason || (playability.messages && playability.messages[0]));
   } else {
     return null;
   }
@@ -103,14 +95,20 @@ const privateVideoError = player_response => {
 
 const isRental = player_response => {
   let playability = player_response.playabilityStatus;
-  return playability && playability.status === 'UNPLAYABLE' && /requires payment/.test(playability.reason);
+  return playability && playability.status === 'UNPLAYABLE' &&
+    playability.errorScreen && playability.errorScreen.playerLegacyDesktopYpcOfferRenderer;
 };
 
 
-const getWatchURL = (id, options) =>
-  `${VIDEO_URL + id}&hl=${options.lang || 'en'}&bpctr=${Math.ceil(Date.now() / 1000)}`;
-const getWatchPage = (id, options) => {
-  const url = getWatchURL(id, options);
+const isNotYetBroadcasted = player_response => {
+  let playability = player_response.playabilityStatus;
+  return playability && playability.status === 'LIVE_STREAM_OFFLINE';
+};
+
+
+const getHTMLWatchURL = (id, options) => `${VIDEO_URL + id}&hl=${options.lang || 'en'}`;
+const getHTMLWatchPageBody = (id, options) => {
+  const url = getHTMLWatchURL(id, options);
   return exports.watchPageCache.getOrSet(url, () => miniget(url, options.requestOptions).text());
 };
 
@@ -125,22 +123,106 @@ const getHTML5player = body => {
 
 const getIdentityToken = (id, options, key, throwIfNotFound) =>
   exports.cookieCache.getOrSet(key, async() => {
-    let page = await getWatchPage(id, options);
+    let page = await getHTMLWatchPageBody(id, options);
     let match = page.match(/(["'])ID_TOKEN\1[:,]\s?"([^"]+)"/);
     if (!match && throwIfNotFound) {
-      throw Error('Cookie header used in request, but unable to find YouTube identity token');
+      throw new UnrecoverableError('Cookie header used in request, but unable to find YouTube identity token');
     }
     return match && match[2];
   });
 
 
+/**
+ * Goes through each endpoint in the pipeline, retrying on failure if the error is recoverable.
+ * If unable to succeed with one endpoint, moves onto the next one.
+ *
+ * @param {Array.<Object>} args
+ * @param {Function} validate
+ * @param {Object} retryOptions
+ * @param {Array.<Function>} endpoints
+ * @returns {[Object, Object, Object]}
+ */
+const pipeline = async(args, validate, retryOptions, endpoints) => {
+  let info;
+  for (let func of endpoints) {
+    try {
+      const newInfo = await retryFunc(func, args.concat([info]), retryOptions);
+      newInfo.player_response.videoDetails = assign(
+        info && info.player_response && info.player_response.videoDetails,
+        newInfo.player_response.videoDetails);
+      newInfo.player_response = assign(info && info.player_response, newInfo.player_response);
+      info = assign(info, newInfo);
+      if (validate(info, false)) {
+        break;
+      }
+    } catch (err) {
+      if (err instanceof UnrecoverableError || func === endpoints[endpoints.length - 1]) {
+        throw err;
+      }
+      // Unable to find video metadata... so try next endpoint.
+    }
+  }
+  return info;
+};
+
+
+/**
+ * Like Object.assign(), but ignores `null` and `undefined` from `source`.
+ *
+ * @param {Object} target
+ * @param {Object} source
+ * @returns {Object}
+ */
+const assign = (target, source) => {
+  if (!target || !source) { return target || source; }
+  for (let [key, value] of Object.entries(source)) {
+    if (value !== null && value !== undefined) {
+      target[key] = value;
+    }
+  }
+  return target;
+};
+
+
+/**
+ * Given a function, calls it with `args` until it's successful,
+ * or until it encounters an unrecoverable error.
+ * Currently, any error from miniget is considered unrecoverable. Errors such as
+ * too many redirects, invalid URL, status code 404, status code 502.
+ *
+ * @param {Function} func
+ * @param {Array.<Object>} args
+ * @param {Object} options
+ * @param {number} options.maxRetries
+ * @param {Object} options.backoff
+ * @param {number} options.backoff.inc
+ */
+const retryFunc = async(func, args, options) => {
+  let currentTry = 0, result;
+  while (currentTry <= options.maxRetries) {
+    try {
+      result = await func(...args);
+      break;
+    } catch (err) {
+      if (err instanceof UnrecoverableError ||
+        (err instanceof miniget.MinigetError && err.statusCode < 500) || currentTry >= options.maxRetries) {
+        throw err;
+      }
+      let wait = Math.min(++currentTry * options.backoff.inc, options.backoff.max);
+      await new Promise(resolve => setTimeout(resolve, wait));
+    }
+  }
+  return result;
+};
+
+
+const jsonClosingChars = /^[)\]}'\s]+/;
 const parseJSON = (source, json) => {
-  if (!json) {
-    return null;
-  } else if (typeof json === 'object') {
+  if (!json || typeof json === 'object') {
     return json;
   } else {
     try {
+      json = json.replace(jsonClosingChars, '');
       return JSON.parse(json);
     } catch (err) {
       throw Error(`Error parsing ${source}: ${err.message}`);
@@ -149,13 +231,21 @@ const parseJSON = (source, json) => {
 };
 
 
-const getWatchJSONURL = (id, options) => `${getWatchURL(id, options)}&pbj=1`;
-const getJSONWatchPage = async(id, options, maxRetries = 1) => {
+const findPlayerResponse = (source, info) => {
+  const player_response = info && (
+    (info.player && info.player.args && info.player.args.player_response) ||
+    info.player_response || info.playerResponse || info.embedded_player_response);
+  return parseJSON(source, player_response);
+};
+
+
+const getWatchJSONURL = (id, options) => `${getHTMLWatchURL(id, options)}&pbj=1`;
+const getJSONWatchPage = async(id, options) => {
   const reqOptions = Object.assign({ headers: {} }, options.requestOptions);
   let cookie = reqOptions.headers.Cookie || reqOptions.headers.cookie;
-  reqOptions.headers = Object.assign({}, {
+  reqOptions.headers = Object.assign({
     'x-youtube-client-name': '1',
-    'x-youtube-client-version': '2.20200701.03.01',
+    'x-youtube-client-version': '2.20201117.05.00',
     'x-youtube-identity-token': exports.cookieCache.get(cookie || 'browser') || '',
   }, reqOptions.headers);
 
@@ -171,39 +261,50 @@ const getJSONWatchPage = async(id, options, maxRetries = 1) => {
   const jsonUrl = getWatchJSONURL(id, options);
   let body = await miniget(jsonUrl, reqOptions).text();
   let parsedBody;
-  let jsonClosingChars = /^[)\]}'\s]+/;
-  if (jsonClosingChars.test(body)) {
-    body = body.replace(jsonClosingChars, '');
-  }
   parsedBody = parseJSON('watch.json', body);
-  if (parsedBody.reload === 'now' && maxRetries > 0) {
+  if (parsedBody.reload === 'now') {
     await setIdentityToken('browser', false);
-    return getJSONWatchPage(id, options, maxRetries - 1);
   }
-  if (!Array.isArray(parsedBody)) {
-    throw Error('Unable to retrieve video metadata');
+  if (parsedBody.reload === 'now' || !Array.isArray(parsedBody)) {
+    throw Error('Unable to retrieve video metadata in watch.json');
   }
   let info = parsedBody.reduce((part, curr) => Object.assign(curr, part), {});
+  info.player_response = findPlayerResponse('watch.json `player_response`', info);
+  info.html5player = info.player && info.player.assets && info.player.assets.js;
+
   return info;
 };
 
+
+/**
+ * If the video page doesn't work, maybe because it has mature content.
+ * and requires an account logged in to view, try the embed page.
+ *
+ * @param {string} id
+ * @param {Object} options
+ * @returns {string}
+ */
+const EMBED_URL = 'https://www.youtube.com/embed/';
 const getEmbedURL = (id, options) => `${EMBED_URL + id}?hl=${options.lang || 'en'}`;
 const getEmbedPage = async(id, options) => {
   const embedUrl = getEmbedURL(id, options);
   let body = await miniget(embedUrl, options.requestOptions).text();
-  let jsonStr = utils.between(body, /(['"])PLAYER_(CONFIG|VARS)\1:\s?/, '</script>');
-  let config;
-  if (!jsonStr) {
-    throw Error('Could not find player config');
+  let configJson = utils.between(body, /(['"])PLAYER_(CONFIG|VARS)\1:\s?/, '</script>');
+  if (!configJson) {
+    throw Error('Could not find player config in embed.html');
   }
-  config = parseJSON('embed config', utils.cutAfterJSON(jsonStr));
-  let player_response = (config.args && (config.args.player_response || config.args.embedded_player_response)) ||
-    config.embedded_player_response;
-  return [parseJSON('embed `player_response`', player_response), body];
+  let config = parseJSON('embed config', utils.cutAfterJSON(configJson));
+  let info = config.args || config;
+  info.player_response = findPlayerResponse('embed `player_response`', info);
+  info.html5player = getHTML5player(body);
+  return info;
 };
 
 
-const getVideoInfoPage = async(id, options, info) => {
+const INFO_HOST = 'www.youtube.com';
+const INFO_PATH = '/get_video_info';
+const VIDEO_EURL = 'https://youtube.googleapis.com/v/';
+const getVideoInfoPage = async(id, options) => {
   const url = urllib.format({
     protocol: 'https',
     host: INFO_HOST,
@@ -214,12 +315,12 @@ const getVideoInfoPage = async(id, options, info) => {
       ps: 'default',
       gl: 'US',
       hl: options.lang || 'en',
-      sts: info.sts,
     },
   });
-  let morebody = await miniget(url, options.requestOptions).text();
-  let moreinfo = querystring.parse(morebody);
-  return parseJSON('get_video_info `player_response`', moreinfo.player_response || info.playerResponse);
+  let body = await miniget(url, options.requestOptions).text();
+  let info = querystring.parse(body);
+  info.player_response = findPlayerResponse('get_video_info `player_response`', info);
+  return info;
 };
 
 
@@ -230,12 +331,9 @@ const getVideoInfoPage = async(id, options, info) => {
 const parseFormats = player_response => {
   let formats = [];
   if (player_response.streamingData) {
-    if (player_response.streamingData.formats) {
-      formats = formats.concat(player_response.streamingData.formats);
-    }
-    if (player_response.streamingData.adaptiveFormats) {
-      formats = formats.concat(player_response.streamingData.adaptiveFormats);
-    }
+    formats = formats
+      .concat(player_response.streamingData.formats || [])
+      .concat(player_response.streamingData.adaptiveFormats || []);
   }
   return formats;
 };
@@ -257,7 +355,10 @@ exports.getInfo = async(id, options) => {
     );
   let funcs = [];
   if (info.formats.length) {
-    info.html5player = info.html5player || getHTML5player(await getWatchPage(id, options));
+    info.html5player = info.html5player || getHTML5player(await getHTMLWatchPageBody(id, options));
+    if (!info.html5player) {
+      throw Error('Unable to find html5player file');
+    }
     const html5player = urllib.resolve(VIDEO_URL, info.html5player);
     funcs.push(sig.decipherFormats(info.formats, html5player, options));
   }
@@ -344,17 +445,18 @@ const getM3U8 = async(url, options) => {
 
 // Cache get info functions.
 // In case a user wants to get a video's info before downloading.
-for (let fnName of ['getBasicInfo', 'getInfo']) {
+for (let funcName of ['getBasicInfo', 'getInfo']) {
   /**
    * @param {string} link
    * @param {Object} options
    * @returns {Promise<Object>}
    */
-  const fn = exports[fnName];
-  exports[fnName] = (link, options = {}) => {
+  const func = exports[funcName];
+  exports[funcName] = (link, options = {}) => {
+    utils.checkForUpdates();
     let id = urlUtils.getVideoID(link);
-    const key = [fnName, id, options.lang].join('-');
-    return exports.cache.getOrSet(key, () => fn(id, options));
+    const key = [funcName, id, options.lang].join('-');
+    return exports.cache.getOrSet(key, () => func(id, options));
   };
 }
 
