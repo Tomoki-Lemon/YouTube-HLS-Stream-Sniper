@@ -4,7 +4,7 @@
     "name": "HLS & YT Stream Capture",
     "short_name": "YouTube Download & Stream Capture",
     "default_locale": "en",
-    "version": "2.7.0.3",
+    "version": "2.8.0",
     "homepage_url": "https://avipatilweb.me/yt-hls/",
     "permissions": [
         "<all_urls>",
@@ -13,11 +13,13 @@
         "notifications",
         "storage",
         "webRequest",
+        "webNavigation",
+        "webRequestBlocking",
         "downloads",
         "*://*.youtube.com/*",
         "*://*.googlevideo.com/*"
     ],
-    "background": { "page": "lib/chrome/background.html" },
+    "background": { "page": "background.html" },
 
     "icons": {
         "16": "img/icon-dark-16.png",
@@ -26,9 +28,8 @@
     },
 
     "web_accessible_resources": [
-    "data/content_script/icons/*",
-    "data/content_script/inject.css",
-    "data/content_script/resources/vendor/*"
+        "data/download.png",
+        "data/download-white.png"
   ],
 
     "options_ui": {
@@ -37,17 +38,12 @@
         "page": "options/options.html"
     },
 
-    "content_scripts": [{
-        "all_frames": false,
-        "run_at": "document_start",
-        "matches": ["*://*.youtube.com/*"],
-        "exclude_matches": ["*://*.youtube.com/embed/*"],
-         "js": [
-         "data/communication.js",
-         "data/content_script/inject.js",
-         "data/content_script/resources/require.js"
-    ]
-    }],
+    "content_scripts":[
+        {
+            "matches":["*://*.youtube.com/*"],
+            "js":["data/kaner_you_tube_download_common.js",
+                  "data/kaner_you_tube_download_init.js"]}
+            ],
 
 
     "browser_action": {
