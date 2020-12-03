@@ -26,7 +26,7 @@
 <h2>⏱️ Upcoming Features</h2>
 
 - [x] Changing UI/UX <br>
-- [ ] Improve YouTube Downloader <br>
+- [x] Improve YouTube Downloader <br>
 - [ ] Sprate links as Type and Quality <br>
 - [ ] Playlist extraction <br>
 - [ ] Adding More Function and Easy To Use <br>
