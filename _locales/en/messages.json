@@ -3,7 +3,7 @@
 		"message": "Stream detected!"
 	},
 	"notifText": {
-		"message": "New stream detected:\n"
+		"message": "New $1 stream detected:\n"
 	},
 	"notifCopiedTitle": {
 		"message": "URL(s) copied!"
@@ -21,7 +21,7 @@
 		"message": "Unable to copy URL(s):\n"
 	},
 	"extText": {
-		"message": "Formerly known as HLS Stream Detector. Detects M3U8/MPD/F4M/ISM playlists and VTT subtitles used by HLS/DASH/HDS/MSS streams. Assembles readymade youtube-dl/FFmpeg/Streamlink/hlsdl commands."
+                "message": "Formerly known as HLS Stream Detector. Detects M3U8/MPD/F4M/ISM playlists and VTT subtitles used by HLS/DASH/HDS/MSS streams. Assembles readymade youtube-dl/FFmpeg/Streamlink/hlsdl commands."	
 	},
 	"copyMethod": {
 		"message": "Copy stream URL as:"
@@ -101,9 +101,6 @@
 	"popupTimestamp": {
 		"message": "Timestamp"
 	},
-	"copyTooltip": {
-		"message": "Click to copy URL."
-	},
 	"deleteTooltip": {
 		"message": "Click to delete URL."
 	},
@@ -118,5 +115,8 @@
 	},
 	"filterInput": {
 		"message": "Filter:"
+	},
+	"openOptions": {
+		"message": "Options"
 	}
 }
