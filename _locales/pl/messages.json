@@ -118,5 +118,8 @@
 	},
 	"openOptions": {
 		"message": "Ustawienia"
+	},
+		"ytdlopt": {
+		"message": "YouTube Downloader Option : "
 	}
 }
