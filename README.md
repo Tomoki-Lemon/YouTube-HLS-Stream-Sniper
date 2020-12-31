@@ -27,12 +27,14 @@
 
 - [x] Changing UI/UX <br>
 - [x] Improve YouTube Downloader <br>
+- [x] URL Detection Routine  <br>
+- [x] Search for URLS <br>
+- [x] Option Button Add <br>
 - [ ] Sprate links as Type and Quality <br>
 - [ ] Playlist extraction <br>
 - [ ] Adding More Function and Easy To Use <br>
-- [ ] Search for URLS <br>
 - [ ] Direct Download Option For URLs
-- [ ] URL Detection Routine 
+
 
 ---
 
@@ -76,7 +78,7 @@
 ## 🚸 License
 ```python
                  Private License
-             ©️ Avi Patil , 2020-2025
+             ©️ Avi Patil , 2021-2025
 
   Terms :-
 
