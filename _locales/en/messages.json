@@ -24,16 +24,16 @@
                 "message": "Formerly known as HLS Stream Detector. Detects M3U8/MPD/F4M/ISM playlists and VTT subtitles used by HLS/DASH/HDS/MSS streams. Assembles readymade youtube-dl/FFmpeg/Streamlink/hlsdl commands."	
 	},
 	"copyMethod": {
-		"message": "Copy stream URL as:"
+		"message": "Command :"
 	},
 	"url": {
-		"message": "URL only"
+		"message": "URL Only"
 	},
 	"youtubedl": {
-		"message": "youtube-dl command"
+		"message": "Youtube-dl Command"
 	},
 	"youtubedlc": {
-		"message": "youtube-dlc command"
+		"message": "Youtube-dlc Command"
 	},
 	"ffmpeg": {
 		"message": "FFmpeg command"
@@ -42,7 +42,7 @@
 		"message": "Streamlink command"
 	},
 	"hlsdl": {
-		"message": "hlsdl command"
+		"message": "HLSDL command"
 	},
 	"user": {
 		"message": "User-defined command"
@@ -54,7 +54,7 @@
 		"message": "File"
 	},
 	"player": {
-		"message": "Default player"
+		"message": "Default Player"
 	},
 	"customCommand": {
 		"message": "Additional command line parameters:"
@@ -72,13 +72,13 @@
 		"message": "Disable notifications:"
 	},
 	"disablePref": {
-		"message": "Disable detection:"
+		"message": "Disable Detection :"
 	},
 	"clearList": {
-		"message": "Clear this URL list"
+		"message": "Clear All URL List"
 	},
 	"copyAll": {
-		"message": "Copy all visible URLs"
+		"message": "Copy All URL List"
 	},
 	"proxyPref": {
 		"message": "Use HTTP proxy server:"
@@ -105,18 +105,21 @@
 		"message": "Click to delete URL."
 	},
 	"tabThis": {
-		"message": "This tab"
+		"message": "This Tab"
 	},
 	"tabAll": {
-		"message": "All tabs"
+		"message": "All Tabs"
 	},
 	"tabPrevious": {
-		"message": "Previous sessions"
+		"message": "Previous Sessions"
 	},
 	"filterInput": {
-		"message": "Filter:"
+		"message": "Search :"
 	},
 	"openOptions": {
 		"message": "Options"
+	},
+	"ytdlopt": {
+		"message": "YouTube Downloader Option : "
 	}
 }
