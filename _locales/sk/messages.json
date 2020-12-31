@@ -58,5 +58,8 @@
 	},
 	"copyAll": {
 		"message": "Kopírovať všetky adresy URL"
+	},
+		"ytdlopt": {
+		"message": "YouTube Downloader Option : "
 	}
 }

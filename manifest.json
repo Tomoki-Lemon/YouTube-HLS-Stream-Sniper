@@ -4,7 +4,7 @@
     "name": "HLS & YT Stream Capture",
     "short_name": "YouTube Download & Stream Capture",
     "default_locale": "en",
-    "version": "2.8.0",
+    "version": "3.0.0",
     "homepage_url": "https://avipatilweb.me/yt-hls/",
     "permissions": [
         "<all_urls>",
@@ -35,7 +35,7 @@
     "options_ui": {
         "browser_style": true,
         "open_in_tab": false,
-        "page": "options/options.html"
+        "page": "content/options.html"
     },
 
     "content_scripts":[
@@ -48,8 +48,8 @@
 
     "browser_action": {
         "browser_style": true,
-        "default_title": "The Stream Detector",
-        "default_popup": "popup/popup.html",
+        "default_title": "HLS Stram Sniper",
+        "default_popup": "content/popup.html",
         "theme_icons": [{
                 "dark": "img/icon-dark-96.png",
                 "light": "img/icon-light-96.png",

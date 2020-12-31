@@ -4,8 +4,10 @@
 	<head>
 		<meta charset="UTF-8" />
 		  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+		  <link rel="preconnect" href="https://fonts.gstatic.com">
+          <link href="https://fonts.googleapis.com/css2?family=Catamaran&display=swap" rel="stylesheet"> 
 		<style>
-			/* might use a css file in the future. no need for now */
+			/* Its is inbuild CSS here when CSS get Long Used Saprate */
 			html,
 			body {
 				padding: 0;
@@ -14,12 +16,18 @@
 				height: 100%;
 				color: white;
 				background: #202020;
+
 			}
 
 			body {
 		    font-family: 'Varela Round', sans-serif;
-				margin-right: 32px; 	/* addon popup vertical scrollbar workaround */
+		    margin-right: 32px; 	/* addon popup vertical scrollbar workaround */
 
+			}
+
+			a {
+				color: inherit;
+				word-break: break-all;
 			}
 
 			table {
@@ -53,6 +61,9 @@
 				margin: auto 0.25em;	
 			}
 
+			
+			/* Copy ALL Crear ALL and Option Button CSS Started Here */
+			
 			.glow-on-hover {
 			    width: 200px;
 			    height: 35px;
@@ -62,8 +73,10 @@
 			    background: #111;
 			    cursor: pointer;
 			    position: relative;
+			    text-align: center;
 			    z-index: 0;
 			    border-radius: 10px;
+			    font-family: 'Catamaran', sans-serif;
 			}
 
 			.glow-on-hover:before {
@@ -81,6 +94,8 @@
 			    opacity: 0;
 			    transition: opacity .3s ease-in-out;
 			    border-radius: 10px;
+			    text-align: center;
+			    font-family: 'Catamaran', sans-serif;
 			}
 
 			.glow-on-hover:active {
@@ -104,7 +119,9 @@
 			    background: #111;
 			    left: 0;
 			    top: 0;
-			    border-radius: 10px;	 
+			    border-radius: 10px;
+			    text-align: center;
+			    font-family: 'Catamaran', sans-serif;	 
 			}
 
 			@keyframes glowing {
@@ -115,6 +132,7 @@
 
 
 			@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+
 
 	.container
 	{
@@ -157,31 +175,26 @@
 			<tbody>
 				<tr>
 					<td>
-						<div class="browser-style">
-							<input
-								class="option"
-								type="radio"
-								id="tabThis"
-								name="tab"
-							/><label for="tabThis"></label>
-						</div>
+
+
+						<input class="option" type="radio" id="tabThis" name="tab" /><label
+							for="tabThis"
+						></label>
+
 					</td>
 					<td>
-						<div class="browser-style">
-							<input class="option" type="radio" id="tabAll" name="tab" /><label
-								for="tabAll"
-							></label>
-						</div>
+						<input class="option" type="radio" id="tabAll" name="tab" /><label
+							for="tabAll"
+						></label>
 					</td>
 					<td>
-						<div class="browser-style">
-							<input
-								class="option"
-								type="radio"
-								id="tabPrevious"
-								name="tab"
-							/><label for="tabPrevious"></label>
-						</div>
+						<input
+							class="option"
+							type="radio"
+							id="tabPrevious"
+							name="tab"
+						/><label for="tabPrevious"></label>
+
 					</td>
 				</tr>
 			</tbody>
@@ -190,14 +203,12 @@
 			<tbody>
 				<tr>
 					<td>
-						<div class="browser-style">
-							<label for="filterInput"></label
-							><input class="option" type="text" id="filterInput" />
-						</div>
+						<label for="filterInput"></label
+						><input class="option" type="text" id="filterInput" />
 					</td>
 					<td>
 						<label for="copyMethod"></label>
-						<select class="option browser-style" id="copyMethod">
+						<select class="option" id="copyMethod">
 							<option value="url"></option>
 							<option value="youtubedl"></option>
 							<option value="youtubedlc"></option>
@@ -227,22 +238,27 @@
 				<tr>
 					<td>
 						<label for="disablePref"></label
-						><input class="option" id="disablePref" type="checkbox" />
+						><input class="option" id="disablePref" type="checkbox" />  <!-- Disable Detection Checkbox -->
 					</td>
 					<td>
-						<button class="glow-on-hover" id="copyAll">
+						<button class="glow-on-hover" id="copyAll" style="width: 150px;"> <!-- Copy All Button -->
 							<label for="copyAll"></label>
 						</button>
 					</td>
 					<td>
-						<button class="glow-on-hover" id="clearList">
+						<button class="glow-on-hover" id="clearList" style="width: 150px;">  <!-- Clear All Button -->
 							<label for="clearList"></label>
+						</button>
+					</td>
+					<td>
+						<button class="glow-on-hover" id="openOptions" style="width: 80px;">  <!-- Open Option Of Ext. -->
+							<label for="openOptions"></label>
 						</button>
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		<footer style="text-align: center; margin-top:7px; margin-bottom: 3px; font-size: 12px;"><a href="https://avipatilweb.me/" style="color: orange; text-decoration: none;"><strong>
+		<footer style="text-align: center; margin-top:7px; margin-bottom: 3px; font-size: 12px;"><a href="https://avipatilweb.me/" style="color: #07b3ea; text-decoration: none;"><strong>
 			© 2020 AviPatil</strong></a>
 		</footer>
 

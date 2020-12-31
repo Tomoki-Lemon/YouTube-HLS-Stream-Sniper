@@ -3,7 +3,7 @@
 		"message": "Wykryto stream!"
 	},
 	"notifText": {
-		"message": "Wykryto nowy stream:\n"
+		"message": "Wykryto nowy $1 stream:\n"
 	},
 	"notifCopiedTitle": {
 		"message": "Skopiowano link(i)!"
@@ -101,9 +101,6 @@
 	"popupTimestamp": {
 		"message": "Data"
 	},
-	"copyTooltip": {
-		"message": "Kliknij, aby skopiować link."
-	},
 	"deleteTooltip": {
 		"message": "Kliknij, aby usunąć link."
 	},
@@ -118,5 +115,11 @@
 	},
 	"filterInput": {
 		"message": "Filtr:"
+	},
+	"openOptions": {
+		"message": "Ustawienia"
+	},
+		"ytdlopt": {
+		"message": "YouTube Downloader Option : "
 	}
 }
