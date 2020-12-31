@@ -5,7 +5,7 @@
 		<meta charset="UTF-8" />
 		  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
 		<style>
-			/* might use a css file in the future. no need for now */
+			/* Its is inbuild CSS here when CSS get Long Used Saprate */
 			html,
 			body {
 				padding: 0;
@@ -20,6 +20,11 @@
 		    font-family: 'Varela Round', sans-serif;
 				margin-right: 32px; 	/* addon popup vertical scrollbar workaround */
 
+			}
+
+			a {
+				color: inherit;
+				word-break: break-all;
 			}
 
 			table {
@@ -53,6 +58,9 @@
 				margin: auto 0.25em;	
 			}
 
+			
+			/* Copy ALL Crear ALL and Option Button CSS Started Here */
+			
 			.glow-on-hover {
 			    width: 200px;
 			    height: 35px;
@@ -157,31 +165,26 @@
 			<tbody>
 				<tr>
 					<td>
-						<div class="browser-style">
-							<input
-								class="option"
-								type="radio"
-								id="tabThis"
-								name="tab"
-							/><label for="tabThis"></label>
-						</div>
+
+
+						<input class="option" type="radio" id="tabThis" name="tab" /><label
+							for="tabThis"
+						></label>
+
 					</td>
 					<td>
-						<div class="browser-style">
-							<input class="option" type="radio" id="tabAll" name="tab" /><label
-								for="tabAll"
-							></label>
-						</div>
+						<input class="option" type="radio" id="tabAll" name="tab" /><label
+							for="tabAll"
+						></label>
 					</td>
 					<td>
-						<div class="browser-style">
-							<input
-								class="option"
-								type="radio"
-								id="tabPrevious"
-								name="tab"
-							/><label for="tabPrevious"></label>
-						</div>
+						<input
+							class="option"
+							type="radio"
+							id="tabPrevious"
+							name="tab"
+						/><label for="tabPrevious"></label>
+
 					</td>
 				</tr>
 			</tbody>
@@ -190,14 +193,12 @@
 			<tbody>
 				<tr>
 					<td>
-						<div class="browser-style">
-							<label for="filterInput"></label
-							><input class="option" type="text" id="filterInput" />
-						</div>
+						<label for="filterInput"></label
+						><input class="option" type="text" id="filterInput" />
 					</td>
 					<td>
 						<label for="copyMethod"></label>
-						<select class="option browser-style" id="copyMethod">
+						<select class="option" id="copyMethod">
 							<option value="url"></option>
 							<option value="youtubedl"></option>
 							<option value="youtubedlc"></option>
@@ -227,16 +228,21 @@
 				<tr>
 					<td>
 						<label for="disablePref"></label
-						><input class="option" id="disablePref" type="checkbox" />
+						><input class="option" id="disablePref" type="checkbox" />  <!-- Disable Detection Checkbox -->
 					</td>
 					<td>
-						<button class="glow-on-hover" id="copyAll">
+						<button class="glow-on-hover" id="copyAll">  <!-- Copy All Button -->
 							<label for="copyAll"></label>
 						</button>
 					</td>
 					<td>
-						<button class="glow-on-hover" id="clearList">
+						<button class="glow-on-hover" id="clearList">  <!-- Clear All Button -->
 							<label for="clearList"></label>
+						</button>
+					</td>
+					<td>
+						<button class="glow-on-hover" id="openOptions">  <!-- Open Option Of Ext. -->
+							<label for="openOptions"></label>
 						</button>
 					</td>
 				</tr>
