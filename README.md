@@ -62,7 +62,7 @@
 
 [+] Copy Of Repo Without Credits Is Against License.
 [+] Show some ⭐ to the repo for support.
-[+] (c) Copyright Avi Patil 2020-2025.
+[+] (c) Copyright Avi Patil 2021-2025.
 
 ```
 
