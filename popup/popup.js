@@ -24,8 +24,6 @@ function copyURL(info) {
 				(ext === "f4m" && fileMethod === "ffmpeg") ||
 				(ext === "ism" &&
 					(fileMethod !== "youtubedl" || fileMethod !== "youtubedlc")) ||
-				(ext === "vtt" &&
-					(fileMethod !== "youtubedl" || fileMethod !== "youtubedlc")) ||
 				((ext === "vtt" ||
 					ext === "srt" ||
 					ext === "ttml" ||
@@ -111,20 +109,20 @@ function copyURL(info) {
 
 				// additional headers
 				if (options.headersPref === true) {
-					let headerUserAgent = e.requestHeaders.find(
+					let headerUserAgent = e.headers.find(
 						header => header.name.toLowerCase() === "user-agent"
 					);
 					headerUserAgent
 						? (headerUserAgent = headerUserAgent.value)
 						: (headerUserAgent = navigator.userAgent);
 
-					let headerCookie = e.requestHeaders.find(
+					let headerCookie = e.headers.find(
 						header => header.name.toLowerCase() === "cookie"
 					);
 					if (headerCookie)
 						headerCookie = headerCookie.value.replaceAll(`"`, `'`); // double quotation marks mess up the command
 
-					let headerReferer = e.requestHeaders.find(
+					let headerReferer = e.headers.find(
 						header => header.name.toLowerCase() === "referer"
 					);
 					if (headerReferer) headerReferer = headerReferer.value;
@@ -246,68 +244,44 @@ function copyURL(info) {
 			list.filenames.push(`${filename}.${ext}`);
 			list.methodIncomp = methodIncomp;
 		}
-		if (navigator.clipboard && navigator.clipboard.writeText) {
-			navigator.clipboard.writeText(list.urls.join("\n")).then(
-				() => {
-					if (options.notifPref !== true) {
-						browser.notifications.create("copy", {
-							type: "basic",
-							iconUrl: "img/icon-dark-96.png",
-							title: _("notifCopiedTitle"),
-							message:
-								(list.methodIncomp === true
-									? _("notifIncompCopiedText")
-									: _("notifCopiedText")) + list.filenames.join("\n")
-						});
-					}
-				},
-				error => {
-					browser.notifications.create("error", {
-						type: "basic",
-						iconUrl: "img/icon-dark-96.png",
-						title: _("notifErrorTitle"),
-						message: _("notifErrorText") + error
-					});
-				}
-			);
-		} else {
-			// fallback in case the clipboard api doesn't work properly
-			const copyText = document.createElement("textarea");
-			copyText.style.position = "absolute";
-			copyText.style.left = "-5454px";
-			copyText.style.top = "-5454px";
-			document.body.appendChild(copyText);
-			copyText.value = list.urls.join("\n");
-			try {
-				copyText.select();
-				document.execCommand("copy");
-				document.body.removeChild(copyText);
-				if (options.notifPref !== true) {
-					browser.notifications.create("copy", {
-						type: "basic",
-						iconUrl: "img/icon-dark-96.png",
-						title: _("notifCopiedTitle"),
-						message:
-							(list.methodIncomp === true
-								? _("notifIncompCopiedText")
-								: _("notifCopiedText")) + list.filenames.join("\n")
-					});
-				}
-			} catch (e) {
-				browser.notifications.create("error", {
+		const copyText = document.createElement("textarea");
+		copyText.style.position = "absolute";
+		copyText.style.left = "-5454px";
+		copyText.style.top = "-5454px";
+		document.body.appendChild(copyText);
+		copyText.value = list.urls.join("\n");
+		try {
+			copyText.select();
+			document.execCommand("copy");
+			document.body.removeChild(copyText);
+			if (options.notifPref !== true) {
+				browser.notifications.create("copy", {
 					type: "basic",
 					iconUrl: "img/icon-dark-96.png",
-					title: _("notifErrorTitle"),
-					message: _("notifErrorText") + e
+					title: _("notifCopiedTitle"),
+					message:
+						(list.methodIncomp === true
+							? _("notifIncompCopiedText")
+							: _("notifCopiedText")) + list.filenames.join("\n")
 				});
 			}
+		} catch (e) {
+			browser.notifications.create("error", {
+				type: "basic",
+				iconUrl: "img/icon-dark-96.png",
+				title: _("notifErrorTitle"),
+				message: _("notifErrorText") + e
+			});
 		}
 	});
 }
 
 function deleteURL(requestDetails) {
 	const deleteUrlStorage = [requestDetails];
-	browser.runtime.sendMessage({ delete: deleteUrlStorage }); // notify background script to update urlstorage. workaround
+	browser.runtime.sendMessage({
+		delete: deleteUrlStorage,
+		previous: document.getElementById("tabPrevious").checked
+	}); // notify background script to update urlstorage. workaround
 }
 
 function getIdList() {
@@ -330,7 +304,10 @@ function clearList() {
 		idList.includes(url.requestId)
 	);
 
-	browser.runtime.sendMessage({ delete: deleteUrlStorage });
+	browser.runtime.sendMessage({
+		delete: deleteUrlStorage,
+		previous: document.getElementById("tabPrevious").checked
+	});
 }
 
 function createList() {
@@ -348,10 +325,16 @@ function createList() {
 			extCell.textContent = requestDetails.ext.toUpperCase();
 
 			const urlCell = document.createElement("td");
-			urlCell.textContent = requestDetails.filename;
-			urlCell.onclick = () => copyURL([requestDetails]);
-			urlCell.style.cursor = "pointer";
-			urlCell.title = _("copyTooltip");
+			const urlHref = document.createElement("a");
+			urlHref.textContent = requestDetails.filename;
+			urlHref.href = requestDetails.url;
+			urlHref.onclick = e => {
+				e.preventDefault();
+				copyURL([requestDetails]);
+			};
+			urlHref.style.cursor = "pointer";
+			urlHref.title = requestDetails.url;
+			urlCell.appendChild(urlHref);
 
 			const sourceCell = document.createElement("td");
 			sourceCell.textContent = requestDetails.hostname;
@@ -404,7 +387,10 @@ function createList() {
 		// clear list first just in case - quick and dirty
 		table.innerHTML = "";
 
-		if (options.urlStorage && options.urlStorage.length > 0) {
+		if (
+			(options.urlStorage && options.urlStorage.length > 0) ||
+			(options.urlStorageRestore || options.urlStorageRestore.length > 0)
+		) {
 			const urlStorageFilter = document
 				.getElementById("filterInput")
 				.value.toLowerCase();
@@ -412,22 +398,24 @@ function createList() {
 			// do the query first to avoid async issues
 			browser.tabs.query({ active: true, currentWindow: true }).then(tab => {
 				if (document.getElementById("tabThis").checked === true) {
-					urlList = options.urlStorage.filter(
-						url => url.tabId === tab[0].id && !url.restore
-					);
+					urlList = options.urlStorage
+						? options.urlStorage.filter(url => url.tabId === tab[0].id)
+						: [];
 				} else if (document.getElementById("tabAll").checked === true) {
-					urlList = options.urlStorage.filter(url => url.restore !== true);
+					urlList = options.urlStorage || [];
 				} else if (document.getElementById("tabPrevious").checked === true) {
-					urlList = options.urlStorage.filter(url => url.restore === true);
+					urlList = options.urlStorageRestore || [];
 				}
 
 				if (urlStorageFilter)
-					urlList = urlList.filter(
-						url =>
-							url.filename.toLowerCase().includes(urlStorageFilter) ||
-							url.ext.toLowerCase().includes(urlStorageFilter) ||
-							url.hostname.toLowerCase().includes(urlStorageFilter)
-					);
+					urlList =
+						urlList &&
+						urlList.filter(
+							url =>
+								url.filename.toLowerCase().includes(urlStorageFilter) ||
+								url.ext.toLowerCase().includes(urlStorageFilter) ||
+								url.hostname.toLowerCase().includes(urlStorageFilter)
+						);
 
 				urlList.length > 0
 					? insertList(urlList.reverse()) // latest entries first
@@ -445,7 +433,6 @@ function saveOption(e) {
 		browser.storage.local.set({
 			[e.target.id]: e.target.checked
 		});
-		// sync with options.js - workaround
 		browser.runtime.sendMessage({ options: true });
 	} else if (e.target.type === "radio") {
 		// update entire radio group
@@ -516,6 +503,10 @@ function restoreOptions() {
 		document.getElementById("clearList").onclick = e => {
 			e.preventDefault();
 			clearList();
+		};
+		document.getElementById("openOptions").onclick = e => {
+			e.preventDefault();
+			browser.runtime.openOptionsPage();
 		};
 		document.getElementById("filterInput").onkeyup = () => createList();
 	});
