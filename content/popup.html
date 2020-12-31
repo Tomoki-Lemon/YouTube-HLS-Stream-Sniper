@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+		<style>
+			/* might use a css file in the future. no need for now */
+			html,
+			body {
+				padding: 0;
+				margin: 0;
+				width: 100%;
+				height: 100%;
+				color: white;
+				background: #202020;
+			}
+
+			body {
+		    font-family: 'Varela Round', sans-serif;
+				margin-right: 32px; 	/* addon popup vertical scrollbar workaround */
+
+			}
+
+			table {
+				border-collapse: collapse;
+				width: 100%;
+			}
+
+			table,
+			th,
+			td {
+				padding: 0.75em;
+				text-align: center;
+			}
+
+			div {
+				text-align: center;
+			}
+
+			td *,
+			th * {
+				margin: auto 0;
+			}
+
+			#popupUrlList tr {
+				border: 1px solid gainsboro;
+				border-width: 1px 0;
+			}
+
+			input,
+			select {
+				margin: auto 0.25em;	
+			}
+
+			.glow-on-hover {
+			    width: 200px;
+			    height: 35px;
+			    border: none;
+			    outline: none;
+			    color: #fff;
+			    background: #111;
+			    cursor: pointer;
+			    position: relative;
+			    z-index: 0;
+			    border-radius: 10px;
+			}
+
+			.glow-on-hover:before {
+			    content: '';
+			    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+			    position: absolute;
+			    top: -2px;
+			    left:-2px;
+			    background-size: 400%;
+			    z-index: -1;
+			    filter: blur(5px);
+			    width: calc(100% + 4px);
+			    height: calc(100% + 4px);
+			    animation: glowing 20s linear infinite;
+			    opacity: 0;
+			    transition: opacity .3s ease-in-out;
+			    border-radius: 10px;
+			}
+
+			.glow-on-hover:active {
+			    color: #000
+			}
+
+			.glow-on-hover:active:after {
+			    background: transparent;
+			}
+
+			.glow-on-hover:hover:before {
+			    opacity: 1;
+			}
+
+			.glow-on-hover:after {
+			    z-index: -1;
+			    content: '';
+			    position: absolute;
+			    width: 100%;
+			    height: 100%;
+			    background: #111;
+			    left: 0;
+			    top: 0;
+			    border-radius: 10px;	 
+			}
+
+			@keyframes glowing {
+			    0% { background-position: 0 0; }
+			    50% { background-position: 400% 0; }
+			    100% { background-position: 0 0; }
+			}
+
+
+			@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+
+	.container
+	{
+	  max-width: 960px;
+	  margin: 90px auto;
+	  text-align:center;
+	  border-radius: 10px;
+	}
+
+	select
+	{
+	  -webkit-appearance: none;
+	  appearance: none;
+	  -moz-appearance: window;
+
+	  font-family: 'Open Sans', sans-serif;
+	  font-weight: 700;
+	  font-size:14px;
+
+	  background: #161616 url(http://greenroom.buzzhopper.com/styleguide/img/dropdown_triangle.svg) 150px center no-repeat;
+	  background-size: 10px 7px;
+	  color: #91999E;
+	  width: 180px;
+	  height: 30px;
+	  outline:none;
+	  border-style: none;
+	  border-radius: 10px;
+
+	  outline: none;
+	  padding: 0 15px;
+	 cursor: pointer;
+
+	}
+
+		</style>
+		<title>HLS Stream Capture</title>
+	</head>
+	<body>
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						<div class="browser-style">
+							<input
+								class="option"
+								type="radio"
+								id="tabThis"
+								name="tab"
+							/><label for="tabThis"></label>
+						</div>
+					</td>
+					<td>
+						<div class="browser-style">
+							<input class="option" type="radio" id="tabAll" name="tab" /><label
+								for="tabAll"
+							></label>
+						</div>
+					</td>
+					<td>
+						<div class="browser-style">
+							<input
+								class="option"
+								type="radio"
+								id="tabPrevious"
+								name="tab"
+							/><label for="tabPrevious"></label>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						<div class="browser-style">
+							<label for="filterInput"></label
+							><input class="option" type="text" id="filterInput" />
+						</div>
+					</td>
+					<td>
+						<label for="copyMethod"></label>
+						<select class="option browser-style" id="copyMethod">
+							<option value="url"></option>
+							<option value="youtubedl"></option>
+							<option value="youtubedlc"></option>
+							<option value="ffmpeg"></option>
+							<option value="streamlink"></option>
+							<option value="hlsdl"></option>
+							<option value="user"></option>
+						</select>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<table>
+			<thead>
+				<tr>
+					<th><label for="popupType"></label></th>
+					<th><label for="popupFilename"></label></th>
+					<th><label for="popupSource"></label></th>
+					<th><label for="popupTimestamp"></label></th>
+					<th>X</th>
+				</tr>
+			</thead>
+			<tbody id="popupUrlList"></tbody>
+		</table>
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						<label for="disablePref"></label
+						><input class="option" id="disablePref" type="checkbox" />
+					</td>
+					<td>
+						<button class="glow-on-hover" id="copyAll">
+							<label for="copyAll"></label>
+						</button>
+					</td>
+					<td>
+						<button class="glow-on-hover" id="clearList">
+							<label for="clearList"></label>
+						</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<footer style="text-align: center; margin-top:7px; margin-bottom: 3px; font-size: 12px;"><a href="https://avipatilweb.me/" style="color: orange; text-decoration: none;"><strong>
+			© 2020 AviPatil</strong></a>
+		</footer>
+
+		<script src="popup.js"></script>
+	</body>
+</html>
