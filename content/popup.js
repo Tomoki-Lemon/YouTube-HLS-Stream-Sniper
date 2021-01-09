@@ -8,7 +8,7 @@ const table = document.getElementById("popupUrlList");
 
 let urlList = [];
 
-function copyURL(info) {
+const copyURL = info => {
 	browser.storage.local.get().then(options => {
 		const list = { urls: [], filenames: [], methodIncomp: false };
 		for (const e of info) {
@@ -17,20 +17,19 @@ function copyURL(info) {
 			let fileMethod;
 
 			const streamURL = e.url;
-			const { filename, ext } = e;
+			const { filename, type } = e;
 			fileMethod = !options.copyMethod ? "url" : options.copyMethod; // default to url - just in case
 
 			if (
-				(ext === "f4m" && fileMethod === "ffmpeg") ||
-				(ext === "ism" &&
+				(type === "HDS" && fileMethod === "ffmpeg") ||
+				(type === "MSS" &&
 					(fileMethod !== "youtubedl" || fileMethod !== "youtubedlc")) ||
-				((ext === "vtt" ||
-					ext === "srt" ||
-					ext === "ttml" ||
-					ext === "ttml2" ||
-					ext === "dfxp") &&
+				((type === "VTT" ||
+					type === "SRT" ||
+					type === "TTML" ||
+					type === "DFXP") &&
 					fileMethod !== "url") ||
-				(ext !== "m3u8" && fileMethod === "hlsdl")
+				(type !== "HLS" && fileMethod === "hlsdl")
 			) {
 				fileMethod = "url";
 				methodIncomp = true;
@@ -66,7 +65,7 @@ function copyURL(info) {
 							code += ` --external-downloader "${options.downloaderCommand}"`;
 						break;
 					case "hlsdl":
-						code = "hlsdl -b";
+						code = "hlsdl -b -c";
 						break;
 					case "user":
 						code = options.userCommand;
@@ -125,7 +124,9 @@ function copyURL(info) {
 					let headerReferer = e.headers.find(
 						header => header.name.toLowerCase() === "referer"
 					);
-					if (headerReferer) headerReferer = headerReferer.value;
+					headerReferer = headerReferer
+						? headerReferer.value
+						: e.originUrl || e.documentUrl;
 
 					if (headerUserAgent && headerUserAgent.length > 0) {
 						switch (fileMethod) {
@@ -209,16 +210,23 @@ function copyURL(info) {
 					}
 				}
 
+				let outFilename = filename;
+				if (outFilename.indexOf(".")) {
+					outFilename = outFilename.split(".");
+					outFilename.pop();
+					outFilename = outFilename.join(".");
+				}
+
 				// final part of command
 				switch (fileMethod) {
 					case "ffmpeg":
-						code += ` -i "${streamURL}" -c copy "${filename}.ts"`;
+						code += ` -i "${streamURL}" -c copy "${outFilename}.ts"`;
 						break;
 					case "streamlink":
 						// streamlink output to file or player
 						if (!options.streamlinkOutput) options.streamlinkOutput = "file";
 						if (options.streamlinkOutput === "file")
-							code += ` -o "${filename}.ts"`;
+							code += ` -o "${outFilename}.ts"`;
 						code += ` "${streamURL}" best`;
 						break;
 					case "youtubedl":
@@ -228,7 +236,7 @@ function copyURL(info) {
 						code += ` "${streamURL}"`;
 						break;
 					case "hlsdl":
-						code += ` -o "${filename}.ts" "${streamURL}"`;
+						code += ` -o "${outFilename}.ts" "${streamURL}"`;
 						break;
 					case "user":
 						code = code.replace("%url%", streamURL);
@@ -241,7 +249,7 @@ function copyURL(info) {
 
 			// used to communicate with clipboard/notifications api
 			list.urls.push(code);
-			list.filenames.push(`${filename}.${ext}`);
+			list.filenames.push(filename);
 			list.methodIncomp = methodIncomp;
 		}
 		const copyText = document.createElement("textarea");
@@ -274,31 +282,30 @@ function copyURL(info) {
 			});
 		}
 	});
-}
+};
 
-function deleteURL(requestDetails) {
+const deleteURL = requestDetails => {
 	const deleteUrlStorage = [requestDetails];
 	browser.runtime.sendMessage({
 		delete: deleteUrlStorage,
 		previous: document.getElementById("tabPrevious").checked
 	}); // notify background script to update urlstorage. workaround
-}
+};
 
-function getIdList() {
-	return Array.from(
+const getIdList = () =>
+	Array.from(
 		document.getElementById("popupUrlList").getElementsByTagName("tr")
 	).map(tr => tr.id);
-}
 
-function copyAll() {
+const copyAll = () => {
 	// this seems like a roundabout way of doing this but oh well
 	const idList = getIdList();
 	const copyUrlList = urlList.filter(url => idList.includes(url.requestId));
 
 	copyURL(copyUrlList);
-}
+};
 
-function clearList() {
+const clearList = () => {
 	const idList = getIdList();
 	const deleteUrlStorage = urlList.filter(url =>
 		idList.includes(url.requestId)
@@ -308,10 +315,10 @@ function clearList() {
 		delete: deleteUrlStorage,
 		previous: document.getElementById("tabPrevious").checked
 	});
-}
+};
 
-function createList() {
-	function insertList(urls) {
+const createList = () => {
+	const insertList = urls => {
 		document.getElementById("copyAll").disabled = false;
 		document.getElementById("clearList").disabled = false;
 		document.getElementById("filterInput").disabled = false;
@@ -322,17 +329,22 @@ function createList() {
 			row.id = requestDetails.requestId;
 
 			const extCell = document.createElement("td");
-			extCell.textContent = requestDetails.ext.toUpperCase();
+			extCell.textContent = requestDetails.type.toUpperCase();
 
 			const urlCell = document.createElement("td");
 			const urlHref = document.createElement("a");
 			urlHref.textContent = requestDetails.filename;
 			urlHref.href = requestDetails.url;
-			urlHref.onclick = e => {
+			urlCell.onclick = e => {
 				e.preventDefault();
 				copyURL([requestDetails]);
 			};
-			urlHref.style.cursor = "pointer";
+			urlHref.onclick = e => {
+				e.preventDefault();
+				e.stopPropagation();
+				copyURL([requestDetails]);
+			};
+			urlCell.style.cursor = "pointer";
 			urlHref.title = requestDetails.url;
 			urlCell.appendChild(urlHref);
 
@@ -364,9 +376,9 @@ function createList() {
 
 			table.appendChild(row);
 		}
-	}
+	};
 
-	function insertPlaceholder() {
+	const insertPlaceholder = () => {
 		document.getElementById("copyAll").disabled = true;
 		document.getElementById("clearList").disabled = true;
 		if (document.getElementById("filterInput").value.length === 0)
@@ -381,7 +393,7 @@ function createList() {
 		row.appendChild(placeholderCell);
 
 		table.appendChild(row);
-	}
+	};
 
 	browser.storage.local.get().then(options => {
 		// clear list first just in case - quick and dirty
@@ -413,7 +425,7 @@ function createList() {
 						urlList.filter(
 							url =>
 								url.filename.toLowerCase().includes(urlStorageFilter) ||
-								url.ext.toLowerCase().includes(urlStorageFilter) ||
+								url.type.toLowerCase().includes(urlStorageFilter) ||
 								url.hostname.toLowerCase().includes(urlStorageFilter)
 						);
 
@@ -425,9 +437,9 @@ function createList() {
 			insertPlaceholder();
 		}
 	});
-}
+};
 
-function saveOption(e) {
+const saveOption = e => {
 	const options = document.getElementsByClassName("option");
 	if (e.target.type === "checkbox") {
 		browser.storage.local.set({
@@ -450,11 +462,11 @@ function saveOption(e) {
 		});
 		browser.runtime.sendMessage({ options: true });
 	}
-}
+};
 
-function restoreOptions() {
+const restoreOptions = () => {
 	// change badge text background when clicked
-	browser.browserAction.setBadgeBackgroundColor({ color: "#a7a7a7" });
+	browser.browserAction.setBadgeBackgroundColor({ color: "gainsboro" });
 
 	const options = document.getElementsByClassName("option");
 	// should probably consolidate this with the other one at some point
@@ -510,7 +522,7 @@ function restoreOptions() {
 		};
 		document.getElementById("filterInput").onkeyup = () => createList();
 	});
-}
+};
 
 document.addEventListener("DOMContentLoaded", () => {
 	restoreOptions();
