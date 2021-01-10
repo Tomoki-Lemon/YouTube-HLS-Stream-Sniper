@@ -99,7 +99,7 @@ const addURL = requestDetails => {
 		newEntry
 	) {
 		badgeText = urlStorage.length;
-		browser.browserAction.setBadgeBackgroundColor({ color: "green" });
+		browser.browserAction.setBadgeBackgroundColor({ color: "#0e93ef" });
 		browser.browserAction.setBadgeText({
 			text: badgeText.toString()
 		});
