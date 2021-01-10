@@ -466,7 +466,7 @@ const saveOption = e => {
 
 const restoreOptions = () => {
 	// change badge text background when clicked
-	browser.browserAction.setBadgeBackgroundColor({ color: "gainsboro" });
+	browser.browserAction.setBadgeBackgroundColor({ color: "#a7a7a7" });
 
 	const options = document.getElementsByClassName("option");
 	// should probably consolidate this with the other one at some point
