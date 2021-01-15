@@ -1,18 +1,22 @@
 "use strict";
 
 const supported = [
-	{
-		ext: ["m3u8"],
-		ct: ["application/x-mpegurl", "application/vnd.apple.mpegurl"],
-		type: "HLS"
-	},
-	{ ext: ["mpd"], ct: ["application/dash+xml"], type: "DASH" },
-	{ ext: ["f4m"], ct: ["application/f4m"], type: "HDS" },
-	{ ext: ["ism"], ct: [], type: "MSS" },
-	{ ext: ["vtt"], ct: ["text/vtt"], type: "VTT" },
-	{ ext: ["srt"], ct: ["application/x-subrip"], type: "SRT" },
+	{ ext: ["m3u8"],          ct: ["application/x-mpegurl", "application/vnd.apple.mpegurl"], type: "HLS"},
+	{ ext: ["m3u"],           ct: ["audio/x-mpequrl"], type: "M3U" },
+      //{ ext: ["ts"],            ct: ["video/MP2T"], type: "TS" }, // Not Added Bcoz Start Detect all .TS files 
+	{ ext: ["mpd"],           ct: ["application/dash+xml"], type: "DASH" },
+	{ ext: ["f4m"],           ct: ["application/f4m"], type: "HDS" },
+	{ ext: ["ism"],           ct: [], type: "MSS" },
+	{ ext: ["vtt"],           ct: ["text/vtt"], type: "VTT" },
+	{ ext: ["avi"],           ct: ["video/x-msvideo"], type: "AVI" },
+      //{ ext: ["mp4"],           ct: ["video/mp4"], type: "MP4" }, // Not Added bcoz start detect YouTube Links Also 
+        { ext: ["mkv"],           ct: ["video/x-matroska"], type: "MKV" },
+	{ ext: ["srt"],           ct: ["application/x-subrip"], type: "SRT" },
+	{ ext: ["mp3"],           ct: ["audio/mpeg"], type: "MP3" },
+	{ ext: ["m4a"],           ct: ["audio/m4a"], type: "M4A" },
+      //{ ext: ["webm"],          ct: ["video/webm", "audio/webm"], type: "WEBM" }, // Not Added bcoz start detect YouTube Links Also 
 	{ ext: ["ttml", "ttml2"], ct: ["application/ttml+xml"], type: "TTML" },
-	{ ext: ["dfxp"], ct: ["application/ttaf+xml"], type: "DFXP" }
+	{ ext: ["dfxp"],          ct: ["application/ttaf+xml"], type: "DFXP" }
 ];
 
 const _ = browser.i18n.getMessage;
