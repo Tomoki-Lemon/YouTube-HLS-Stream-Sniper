@@ -19,9 +19,9 @@ const supported = [
 	{ ext: ["dfxp"],          ct: ["application/ttaf+xml"], type: "DFXP" }
 ];
 
-const _ = browser.i18n.getMessage;
+const _ = chrome.i18n.getMessage;
 
-const manifestVersion = browser.runtime.getManifest().version;
+const manifestVersion = chrome.runtime.getManifest().version;
 
 let urlStorage = [];
 let urlStorageRestore = [];
@@ -88,7 +88,7 @@ const addURL = requestDetails => {
 		queue = queue.filter(e => e !== requestDetails.requestId);
 
 		if (notifPref === false) {
-			browser.notifications.create("add", {
+			chrome.notifications.create("add", {
 				// id = only one notification of this type appears at a time
 				type: "basic",
 				iconUrl: "img/icon-dark-96.png",
@@ -103,14 +103,14 @@ const addURL = requestDetails => {
 		newEntry
 	) {
 		badgeText = urlStorage.length;
-		browser.browserAction.setBadgeBackgroundColor({ color: "#0e93ef" });
-		browser.browserAction.setBadgeText({
+		chrome.browserAction.setBadgeBackgroundColor({ color: "#0e93ef" });
+		chrome.browserAction.setBadgeText({
 			text: badgeText.toString()
 		});
 		newEntry = false;
 
-		browser.storage.local.set({ urlStorage, badgeText }).then(
-			() => browser.runtime.sendMessage({ urlStorage: true }) // update popup if opened
+		chrome.storage.local.set({ urlStorage, badgeText },
+			() => chrome.runtime.sendMessage({ urlStorage: true }) // update popup if opened
 		);
 	}
 };
@@ -130,12 +130,11 @@ const deleteURL = message => {
 		);
 	}
 
-	browser.storage.local
-		.set({ urlStorage, urlStorageRestore, badgeText })
-		.then(() => {
-			browser.runtime.sendMessage({ urlStorage: true });
+	chrome.storage.local
+		.set({ urlStorage, urlStorageRestore, badgeText }, () => {
+			chrome.runtime.sendMessage({ urlStorage: true });
 			if (message.previous === false)
-				browser.browserAction.setBadgeText({
+				chrome.browserAction.setBadgeText({
 					text: badgeText === 0 ? "" : badgeText.toString() // only display at 1+
 				});
 		});
@@ -143,9 +142,9 @@ const deleteURL = message => {
 
 const setup = () => {
 	// clear everything and/or set up
-	browser.browserAction.setBadgeText({ text: "" });
+	chrome.browserAction.setBadgeText({ text: "" });
 
-	browser.storage.local.get().then(options => {
+	chrome.storage.local.get((options) => {
 		if (
 			(options.version &&
 				(options.version.split(".")[0] < manifestVersion.split(".")[0] ||
@@ -153,9 +152,9 @@ const setup = () => {
 						options.version.split(".")[1] < manifestVersion.split(".")[1]))) ||
 			!options.version
 		)
-			browser.storage.local.clear();
+			chrome.storage.local.clear();
 
-		browser.storage.local
+		chrome.storage.local
 			.set({
 				// first init also happens here
 				disablePref: options.disablePref || false,
@@ -171,15 +170,14 @@ const setup = () => {
 				notifPref: options.notifPref || false,
 				urlStorageRestore: options.urlStorageRestore || [],
 				version: manifestVersion
-			})
-			.then(() => {
+			}, () => {
 				if (!options.disablePref || options.disablePref === false) {
-					browser.webRequest.onBeforeSendHeaders.addListener(
+					chrome.webRequest.onBeforeSendHeaders.addListener(
 						urlFilter,
 						{ urls: ["<all_urls>"] },
 						["requestHeaders"]
 					);
-					browser.webRequest.onHeadersReceived.addListener(
+					chrome.webRequest.onHeadersReceived.addListener(
 						urlFilter,
 						{ urls: ["<all_urls>"] },
 						["responseHeaders"]
@@ -197,35 +195,35 @@ const setup = () => {
 
 				// restore urls on startup
 				if (urlStorageRestore.length > 0)
-					browser.storage.local.set({
+					chrome.storage.local.set({
 						urlStorageRestore,
 						urlStorage: []
 					});
 			});
 	});
 
-	browser.runtime.onMessage.addListener(message => {
+	chrome.runtime.onMessage.addListener(message => {
 		if (message.delete) deleteURL(message);
 		else if (message.options) {
-			browser.storage.local.get().then(options => {
+			chrome.storage.local.get((options) => {
 				if (
 					options.disablePref === true &&
-					browser.webRequest.onBeforeSendHeaders.hasListener(urlFilter) &&
-					browser.webRequest.onHeadersReceived.hasListener(urlFilter)
+					chrome.webRequest.onBeforeSendHeaders.hasListener(urlFilter) &&
+					chrome.webRequest.onHeadersReceived.hasListener(urlFilter)
 				) {
-					browser.webRequest.onBeforeSendHeaders.removeListener(urlFilter);
-					browser.webRequest.onHeadersReceived.removeListener(urlFilter);
+					chrome.webRequest.onBeforeSendHeaders.removeListener(urlFilter);
+					chrome.webRequest.onHeadersReceived.removeListener(urlFilter);
 				} else if (
 					options.disablePref === false &&
-					!browser.webRequest.onBeforeSendHeaders.hasListener(urlFilter) &&
-					!browser.webRequest.onHeadersReceived.hasListener(urlFilter)
+					!chrome.webRequest.onBeforeSendHeaders.hasListener(urlFilter) &&
+					!chrome.webRequest.onHeadersReceived.hasListener(urlFilter)
 				) {
-					browser.webRequest.onBeforeSendHeaders.addListener(
+					chrome.webRequest.onBeforeSendHeaders.addListener(
 						urlFilter,
 						{ urls: ["<all_urls>"] },
 						["requestHeaders"]
 					);
-					browser.webRequest.onHeadersReceived.addListener(
+					chrome.webRequest.onHeadersReceived.addListener(
 						urlFilter,
 						{ urls: ["<all_urls>"] },
 						["responseHeaders"]
