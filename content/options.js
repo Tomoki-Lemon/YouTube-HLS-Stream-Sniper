@@ -1,8 +1,8 @@
 "use strict";
 
-const _ = browser.i18n.getMessage; // i18n
+const _ = chrome.i18n.getMessage; // i18n
 
-function checkHeadersPref() {
+const checkHeadersPref = () => {
 	document.getElementById("streamlinkOutput").disabled = true;
 	document.getElementById("headersPref").disabled = false;
 	document.getElementById("downloaderPref").disabled = true;
@@ -39,12 +39,12 @@ function checkHeadersPref() {
 		document.getElementById("customCommand").disabled = true;
 		document.getElementById("userCommand").disabled = false;
 	}
-}
+};
 
-function saveOption(e) {
+const saveOption = e => {
 	if (e.target.id === "copyMethod" && e.target.value !== "url") {
 		const prefName = "customCommand" + e.target.value;
-		browser.storage.local.get(prefName).then(res => {
+		chrome.storage.local.get(prefName, (res) => {
 			res[prefName]
 				? (document.getElementById("customCommand").value = res[prefName])
 				: (document.getElementById("customCommand").value = "");
@@ -52,28 +52,28 @@ function saveOption(e) {
 	}
 
 	if (e.target.id === "customCommand") {
-		browser.storage.local.set({
+		chrome.storage.local.set({
 			[e.target.id + document.getElementById("copyMethod").value]: e.target
 				.value
 		});
 	} else if (e.target.type === "checkbox") {
-		browser.storage.local.set({
+		chrome.storage.local.set({
 			[e.target.id]: e.target.checked
 		});
-		browser.runtime.sendMessage({ options: true });
+		chrome.runtime.sendMessage({ options: true });
 	} else {
-		browser.storage.local.set({
+		chrome.storage.local.set({
 			[e.target.id]: e.target.value
 		});
 	}
 
 	checkHeadersPref();
-}
+};
 
-function restoreOptions() {
+const restoreOptions = () => {
 	const options = document.getElementsByClassName("option");
 	// this is truly a pain
-	browser.storage.local.get().then(item => {
+	chrome.storage.local.get((item) => {
 		for (const option of options) {
 			if (option.id === "customCommand") {
 				const prefName =
@@ -95,7 +95,7 @@ function restoreOptions() {
 
 		checkHeadersPref();
 	});
-}
+};
 
 document.addEventListener("DOMContentLoaded", () => {
 	const options = document.getElementsByClassName("option");
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	restoreOptions();
 
 	// sync with popup changes
-	browser.runtime.onMessage.addListener(message => {
+	chrome.runtime.onMessage.addListener(message => {
 		if (message.options) restoreOptions();
 	});
 });
