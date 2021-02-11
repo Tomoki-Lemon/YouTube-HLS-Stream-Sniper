@@ -8,7 +8,7 @@
     "homepage_url": "https://avipatilweb.me/yt-hls/",
     "permissions": [
         "<all_urls>",
-        "activeTab",
+        "tabs",
         "clipboardWrite",
         "notifications",
         "storage",
@@ -50,6 +50,10 @@
         "browser_style": true,
         "default_title": "HLS Stram Sniper",
         "default_popup": "content/popup.html",
+        "default_icon": {
+			"16": "img/icon-dark-16.png",
+			"48": "img/icon-dark-48.png"
+		},
         "theme_icons": [{
                 "dark": "img/icon-dark-96.png",
                 "light": "img/icon-light-96.png",
